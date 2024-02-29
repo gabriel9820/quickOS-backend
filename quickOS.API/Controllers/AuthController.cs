@@ -16,14 +16,32 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task Login([FromBody] LoginInputModel loginInputModel)
+    public async Task<IActionResult> Login([FromBody] LoginInputModel loginInputModel)
     {
-        await _authService.LoginAsync(loginInputModel);
+        var result = await _authService.LoginAsync(loginInputModel);
+
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+        else
+        {
+            return StatusCode(result.ErrorCode, result.Message);
+        }
     }
 
     [HttpPost("register")]
-    public async Task Register([FromBody] RegisterInputModel registerInputModel)
+    public async Task<IActionResult> Register([FromBody] RegisterInputModel registerInputModel)
     {
-        await _authService.RegisterAsync(registerInputModel);
+        var result = await _authService.RegisterAsync(registerInputModel);
+
+        if (result.Success)
+        {
+            return Ok(result);
+        }
+        else
+        {
+            return StatusCode(result.ErrorCode, result.Message);
+        }
     }
 }

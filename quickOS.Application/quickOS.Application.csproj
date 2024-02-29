@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs/OutputModels/" />
     <Folder Include="Services/" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\quickOS.Core\quickOS.Core.csproj" />
   </ItemGroup>
 
 </Project>
