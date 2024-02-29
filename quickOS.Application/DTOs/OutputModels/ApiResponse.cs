@@ -7,15 +7,15 @@ public class ApiResponse<T> where T : class
     public bool Success { get; private set; }
     public T? Data { get; private set; }
     public int ErrorCode { get; private set; }
-    public string? Message { get; private set; }
+    public string? ErrorMessage { get; private set; }
     // public IEnumerable<string> Errors { get; private set; }
 
-    private ApiResponse(bool success, T? data, HttpStatusCode? errorCode, string? message)
+    private ApiResponse(bool success, T? data, HttpStatusCode? errorCode, string? errorMessage)
     {
         Success = success;
         Data = data;
         ErrorCode = (int)errorCode.GetValueOrDefault();
-        Message = message;
+        ErrorMessage = errorMessage;
     }
 
     public static ApiResponse<T> Ok(T? data = null)
@@ -23,8 +23,8 @@ public class ApiResponse<T> where T : class
         return new ApiResponse<T>(true, data, null, null);
     }
 
-    public static ApiResponse<T> Error(HttpStatusCode errorCode, string? message = null)
+    public static ApiResponse<T> Error(HttpStatusCode errorCode, string? errorMessage = null)
     {
-        return new ApiResponse<T>(false, null, errorCode, message);
+        return new ApiResponse<T>(false, null, errorCode, errorMessage);
     }
 }

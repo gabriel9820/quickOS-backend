@@ -20,14 +20,12 @@ public class AuthController : ControllerBase
     {
         var result = await _authService.LoginAsync(loginInputModel);
 
-        if (result.Success)
+        if (!result.Success)
         {
-            return Ok(result);
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
-        else
-        {
-            return StatusCode(result.ErrorCode, result.Message);
-        }
+
+        return Ok(result);
     }
 
     [HttpPost("register")]
@@ -35,13 +33,11 @@ public class AuthController : ControllerBase
     {
         var result = await _authService.RegisterAsync(registerInputModel);
 
-        if (result.Success)
+        if (!result.Success)
         {
-            return Ok(result);
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
-        else
-        {
-            return StatusCode(result.ErrorCode, result.Message);
-        }
+
+        return Ok(result);
     }
 }
