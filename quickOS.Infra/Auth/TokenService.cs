@@ -22,6 +22,7 @@ public class TokenService : ITokenService
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
         var key = _configuration["Jwt:Key"];
+        var expiresInHours = double.Parse(_configuration["Jwt:ExpiresInHours"]);
 
         var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
@@ -29,6 +30,7 @@ public class TokenService : ITokenService
         var claims = new List<Claim>
         {
             new Claim("email", user.Email),
+            new Claim("role", user.Role.ToString())
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -36,7 +38,7 @@ public class TokenService : ITokenService
             issuer: issuer,
             audience: audience,
             claims: claims,
-            expires: DateTime.Now.AddHours(8),
+            expires: DateTime.Now.AddHours(expiresInHours),
             signingCredentials: signingCredentials);
 
         var stringToken = tokenHandler.WriteToken(token);
