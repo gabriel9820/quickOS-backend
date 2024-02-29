@@ -4,5 +4,5 @@ namespace quickOS.Core.Repositories;
 
 public interface ICompanyRepository
 {
-    Task<Company> GetByExternalIdAsync(Guid externalId);
+    Task<Company> CreateAsync(Company company);
 }

@@ -1,9 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using quickOS.Core.Entities;
 using quickOS.Core.Repositories;
-using quickOS.Infra.Persistence;
 
-namespace quickOS.Infra.Repositories;
+namespace quickOS.Infra.Persistence.Repositories;
 
 public class UserRepository : IUserRepository
 {
@@ -14,8 +13,16 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User?> Authenticate(string email, string passwordHash)
+    public async Task<User?> AuthenticateAsync(string email, string passwordHash)
     {
-        return await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
+        var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
+        return user;
+    }
+
+    public async Task<User> CreateAsync(User user)
+    {
+        await _dbContext.Users.AddAsync(user);
+        await _dbContext.SaveChangesAsync();
+        return user;
     }
 }

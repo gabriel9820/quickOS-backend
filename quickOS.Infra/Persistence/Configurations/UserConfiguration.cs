@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using quickOS.Core.Entities;
 
-namespace quickOS.Infra.Configurations;
+namespace quickOS.Infra.Persistence.Configurations;
 
 public class UserConfiguration : IEntityTypeConfiguration<User>
 {

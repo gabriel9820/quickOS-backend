@@ -1,40 +1,40 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
+﻿using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.DTOs.OutputModels;
 using quickOS.Application.Interfaces;
 using quickOS.Core.Entities;
+using quickOS.Core.Enums;
 using quickOS.Core.Repositories;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
+using quickOS.Core.Services;
 
-namespace quickOS.Infra.Auth;
+namespace quickOS.Application.Services;
 
 public class AuthService : IAuthService
 {
-    private readonly IConfiguration _configuration;
     private readonly IUserRepository _userRepository;
+    private readonly ICompanyRepository _companyRepository;
+    private readonly ITokenService _tokenService;
 
-    public AuthService(IConfiguration configuration, IUserRepository userRepository)
+    public AuthService(IUserRepository userRepository, ICompanyRepository companyRepository, ITokenService tokenService)
     {
-        _configuration = configuration;
         _userRepository = userRepository;
+        _companyRepository = companyRepository;
+        _tokenService = tokenService;
     }
 
     public async Task<ApiResponse<LoginOutputModel>> LoginAsync(LoginInputModel loginInputModel)
     {
         var passwordHash = ComputeSha256Hash(loginInputModel.Password);
-        var user = await _userRepository.Authenticate(loginInputModel.Email, passwordHash);
+        var user = await _userRepository.AuthenticateAsync(loginInputModel.Email, passwordHash);
 
         if (user == null)
         {
             return ApiResponse<LoginOutputModel>.Error(HttpStatusCode.Unauthorized, "Email e/ou senha incorretos");
         }
 
-        var accessToken = CreateAccessToken(user);
+        var accessToken = _tokenService.CreateAccessToken(user);
         var authenticatedUser = new AuthenticatedUserOutputModel(user.FullName, user.Email);
         var result = new LoginOutputModel(accessToken, authenticatedUser);
 
@@ -43,7 +43,26 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<LoginOutputModel>> RegisterAsync(RegisterInputModel registerInputModel)
     {
-        throw new NotImplementedException();
+        var company = new Company("Empresa 1", true);
+        await _companyRepository.CreateAsync(company);
+
+        var passwordHash = ComputeSha256Hash(registerInputModel.Password);
+        var user = new User(
+            registerInputModel.FullName,
+            registerInputModel.CellPhone,
+            registerInputModel.Email,
+            passwordHash,
+            true,
+            Role.Admin,
+            company
+        );
+        await _userRepository.CreateAsync(user);
+
+        var accessToken = _tokenService.CreateAccessToken(user);
+        var authenticatedUser = new AuthenticatedUserOutputModel(user.FullName, user.Email);
+        var result = new LoginOutputModel(accessToken, authenticatedUser);
+
+        return ApiResponse<LoginOutputModel>.Ok(result);
     }
 
     private string ComputeSha256Hash(string password)
@@ -60,32 +79,5 @@ public class AuthService : IAuthService
 
             return builder.ToString();
         }
-    }
-
-    private string CreateAccessToken(User user)
-    {
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = _configuration["Jwt:Key"];
-
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
-        var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-        var claims = new List<Claim>
-        {
-            new Claim("email", user.Email),
-        };
-
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
-            claims: claims,
-            expires: DateTime.Now.AddHours(8),
-            signingCredentials: signingCredentials);
-
-        var stringToken = tokenHandler.WriteToken(token);
-
-        return stringToken;
     }
 }

@@ -24,6 +24,7 @@ public class RegisterInputModel
     public string Password { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [MinLength(8, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
     [Compare("Password", ErrorMessage = "As senhas não correspondem")]
     public string ConfirmPassword { get; set; } = string.Empty;
 }

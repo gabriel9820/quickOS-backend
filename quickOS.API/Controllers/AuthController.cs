@@ -25,7 +25,7 @@ public class AuthController : ControllerBase
             return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 
     [HttpPost("register")]
@@ -38,6 +38,6 @@ public class AuthController : ControllerBase
             return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
 
-        return Ok(result);
+        return Ok(result.Data);
     }
 }

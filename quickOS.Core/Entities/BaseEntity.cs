@@ -10,7 +10,7 @@ public abstract class BaseEntity
     protected BaseEntity()
     {
         ExternalId = Guid.NewGuid();
-        CreatedAt = DateTime.Now;
-        UpdatedAt = DateTime.Now;
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
     }
 }
