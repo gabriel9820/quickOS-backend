@@ -10,7 +10,15 @@ public abstract class BaseEntity
     protected BaseEntity()
     {
         ExternalId = Guid.NewGuid();
-        CreatedAt = DateTime.UtcNow;
-        UpdatedAt = DateTime.UtcNow;
+    }
+
+    public void SetCreatedAt(DateTime now)
+    {
+        CreatedAt = now;
+    }
+
+    public void SetUpdatedAt(DateTime now)
+    {
+        UpdatedAt = now;
     }
 }
