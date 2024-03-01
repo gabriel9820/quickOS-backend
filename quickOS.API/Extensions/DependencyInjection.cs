@@ -15,7 +15,7 @@ using quickOS.Infra.Persistence.Repositories;
 
 namespace quickOS.API.Extensions;
 
-public static class ServiceCollectionExtensions
+public static class DependencyInjection
 {
     public static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
     {
