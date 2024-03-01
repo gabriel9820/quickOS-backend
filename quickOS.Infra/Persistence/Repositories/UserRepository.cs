@@ -15,14 +15,16 @@ public class UserRepository : IUserRepository
 
     public async Task<User?> AuthenticateAsync(string email, string passwordHash)
     {
-        var user = await _dbContext.Users.SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
+        var user = await _dbContext.Users
+            .Include(u => u.Company)
+            .SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
+
         return user;
     }
 
     public async Task<User> CreateAsync(User user)
     {
         await _dbContext.Users.AddAsync(user);
-        await _dbContext.SaveChangesAsync();
         return user;
     }
 }

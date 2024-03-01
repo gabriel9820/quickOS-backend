@@ -15,12 +15,14 @@ public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
     private readonly ICompanyRepository _companyRepository;
+    private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
 
-    public AuthService(IUserRepository userRepository, ICompanyRepository companyRepository, ITokenService tokenService)
+    public AuthService(IUserRepository userRepository, ICompanyRepository companyRepository, IUnitOfWork unitOfWork, ITokenService tokenService)
     {
         _userRepository = userRepository;
         _companyRepository = companyRepository;
+        _unitOfWork = unitOfWork;
         _tokenService = tokenService;
     }
 
@@ -57,6 +59,8 @@ public class AuthService : IAuthService
             company
         );
         await _userRepository.CreateAsync(user);
+
+        await _unitOfWork.SaveChangesAsync();
 
         var accessToken = _tokenService.CreateAccessToken(user);
         var authenticatedUser = new AuthenticatedUserOutputModel(user.FullName, user.Email);

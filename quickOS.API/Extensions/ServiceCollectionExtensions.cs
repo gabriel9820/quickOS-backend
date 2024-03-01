@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using quickOS.API.Providers;
 using quickOS.Application.AutoMapper;
 using quickOS.Application.Interfaces;
 using quickOS.Application.Services;
@@ -74,7 +75,9 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(AutoMapperProfiles));
+        services.AddScoped<IRequestProvider, RequestProvider>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<ICompanyService, CompanyService>();
 
         return services;
     }
@@ -82,7 +85,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<QuickOSDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("quickOS")));
-        // services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();

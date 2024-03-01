@@ -1,4 +1,5 @@
-﻿using quickOS.Core.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using quickOS.Core.Entities;
 using quickOS.Core.Repositories;
 
 namespace quickOS.Infra.Persistence.Repositories;
@@ -15,7 +16,15 @@ public class CompanyRepository : ICompanyRepository
     public async Task<Company> CreateAsync(Company company)
     {
         await _dbContext.Companies.AddAsync(company);
-        await _dbContext.SaveChangesAsync();
+        return company;
+    }
+
+    public async Task<Company?> GetByExternalIdAsync(Guid externalId)
+    {
+        var company = await _dbContext.Companies
+            .AsNoTracking()
+            .SingleOrDefaultAsync(c => c.ExternalId == externalId);
+
         return company;
     }
 }
