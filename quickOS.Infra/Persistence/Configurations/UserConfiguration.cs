@@ -11,6 +11,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasKey(u => u.Id);
 
         builder.HasIndex(u => u.ExternalId).IsUnique();
+        builder.HasIndex(u => u.Email).IsUnique();
+        builder.HasIndex(u => u.CellPhone).IsUnique();
 
         builder.Property(u => u.CreatedAt).IsRequired();
         builder.Property(u => u.UpdatedAt).IsRequired();
