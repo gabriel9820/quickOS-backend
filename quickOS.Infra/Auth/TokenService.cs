@@ -30,7 +30,6 @@ public class TokenService : ITokenService
         var claims = new List<Claim>
         {
             new Claim("id", user.ExternalId.ToString()),
-            new Claim("email", user.Email),
             new Claim("role", user.Role.ToString()),
             new Claim("companyId", user.Company.ExternalId.ToString())
         };
