@@ -25,7 +25,12 @@ public class AuthController : ControllerBase
             return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
 
-        return Ok(result.Data);
+        var user = result.Data!.User;
+        var accessToken = result.Data!.AccessToken;
+
+        Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+
+        return Ok(user);
     }
 
     [HttpPost("register")]
