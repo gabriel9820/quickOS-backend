@@ -13,11 +13,11 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
-    public async Task<User?> AuthenticateAsync(string email, string passwordHash)
+    public async Task<User?> GetByEmailAsync(string email)
     {
         var user = await _dbContext.Users
             .Include(u => u.Company)
-            .SingleOrDefaultAsync(u => u.Email == email && u.Password == passwordHash);
+            .SingleOrDefaultAsync(u => u.Email == email);
 
         return user;
     }

@@ -1,6 +1,5 @@
-﻿using System.Net;
-using System.Security.Cryptography;
-using System.Text;
+﻿using BC = BCrypt.Net.BCrypt;
+using System.Net;
 using AutoMapper;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.DTOs.OutputModels;
@@ -36,10 +35,9 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<LoginOutputModel>> LoginAsync(LoginInputModel loginInputModel)
     {
-        var passwordHash = ComputeSha256Hash(loginInputModel.Password);
-        var user = await _userRepository.AuthenticateAsync(loginInputModel.Email, passwordHash);
+        var user = await _userRepository.GetByEmailAsync(loginInputModel.Email);
 
-        if (user == null)
+        if (user == null || !BC.Verify(loginInputModel.Password, user.Password))
         {
             return ApiResponse<LoginOutputModel>.Error(HttpStatusCode.Unauthorized, "Email e/ou senha incorretos");
         }
@@ -52,12 +50,11 @@ public class AuthService : IAuthService
         var company = new Company(registerInputModel.CompanyName, true);
         await _companyRepository.CreateAsync(company);
 
-        var passwordHash = ComputeSha256Hash(registerInputModel.Password);
         var user = new User(
             registerInputModel.FullName,
             registerInputModel.CellPhone,
             registerInputModel.Email,
-            passwordHash,
+            BC.HashPassword(registerInputModel.Password),
             true,
             Role.Admin,
             company
@@ -76,21 +73,5 @@ public class AuthService : IAuthService
         var result = new LoginOutputModel(accessToken, authenticatedUser);
 
         return ApiResponse<LoginOutputModel>.Ok(result);
-    }
-
-    private string ComputeSha256Hash(string password)
-    {
-        using (SHA256 sha256Hash = SHA256.Create())
-        {
-            StringBuilder builder = new StringBuilder();
-            byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-            for (int i = 0; i < bytes.Length; i++)
-            {
-                builder.Append(bytes[i].ToString("x2")); // x2 faz com que seja convertido em representação hexadecimal
-            }
-
-            return builder.ToString();
-        }
     }
 }

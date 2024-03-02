@@ -4,6 +4,6 @@ namespace quickOS.Core.Repositories;
 
 public interface IUserRepository
 {
-    Task<User?> AuthenticateAsync(string email, string passwordHash);
+    Task<User?> GetByEmailAsync(string email);
     Task<User> CreateAsync(User user);
 }
