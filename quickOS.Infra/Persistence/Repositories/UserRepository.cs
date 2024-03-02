@@ -13,6 +13,12 @@ public class UserRepository : IUserRepository
         _dbContext = dbContext;
     }
 
+    public async Task<User> CreateAsync(User user)
+    {
+        await _dbContext.Users.AddAsync(user);
+        return user;
+    }
+
     public async Task<User?> GetByEmailAsync(string email)
     {
         var user = await _dbContext.Users
@@ -22,9 +28,9 @@ public class UserRepository : IUserRepository
         return user;
     }
 
-    public async Task<User> CreateAsync(User user)
+    public async Task<bool> VerifyEmailInUseAsync(string email)
     {
-        await _dbContext.Users.AddAsync(user);
-        return user;
+        var result = await _dbContext.Users.AnyAsync(u => u.Email == email);
+        return result;
     }
 }

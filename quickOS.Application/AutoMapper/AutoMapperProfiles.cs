@@ -12,6 +12,6 @@ public class AutoMapperProfiles : Profile
         CreateMap<CompanyInputModel, Company>();
         CreateMap<Company, CompanyOutputModel>();
 
-        CreateMap<User, AuthenticatedUserOutputModel>();
+        CreateMap<User, UserOutputModel>();
     }
 }

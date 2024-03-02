@@ -6,5 +6,5 @@ namespace quickOS.Application.Interfaces;
 public interface IAuthService
 {
     Task<ApiResponse<LoginOutputModel>> LoginAsync(LoginInputModel loginInputModel);
-    Task<ApiResponse<LoginOutputModel>> RegisterAsync(RegisterInputModel registerInputModel);
+    Task<ApiResponse<UserOutputModel>> RegisterAsync(RegisterInputModel registerInputModel);
 }

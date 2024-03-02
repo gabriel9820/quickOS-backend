@@ -45,8 +45,15 @@ public class AuthService : IAuthService
         return CreatePayload(user);
     }
 
-    public async Task<ApiResponse<LoginOutputModel>> RegisterAsync(RegisterInputModel registerInputModel)
+    public async Task<ApiResponse<UserOutputModel>> RegisterAsync(RegisterInputModel registerInputModel)
     {
+        var isEmailInUse = await _userRepository.VerifyEmailInUseAsync(registerInputModel.Email);
+
+        if (isEmailInUse)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O email informado já está em uso");
+        }
+
         var company = new Company(registerInputModel.CompanyName, true);
         await _companyRepository.CreateAsync(company);
 
@@ -63,13 +70,15 @@ public class AuthService : IAuthService
 
         await _unitOfWork.SaveChangesAsync();
 
-        return CreatePayload(user);
+        var result = _mapper.Map<UserOutputModel>(user);
+
+        return ApiResponse<UserOutputModel>.Ok(result);
     }
 
     private ApiResponse<LoginOutputModel> CreatePayload(User user)
     {
         var accessToken = _tokenService.CreateAccessToken(user);
-        var authenticatedUser = _mapper.Map<AuthenticatedUserOutputModel>(user);
+        var authenticatedUser = _mapper.Map<UserOutputModel>(user);
         var result = new LoginOutputModel(accessToken, authenticatedUser);
 
         return ApiResponse<LoginOutputModel>.Ok(result);
