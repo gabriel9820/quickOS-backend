@@ -17,6 +17,18 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
+    public TokenPayload ExtractPayloadFromToken(string accessToken)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var jwt = tokenHandler.ReadJwtToken(accessToken);
+
+        var userId = jwt.Claims.FirstOrDefault(claim => claim.Type == "id")?.Value;
+        var userEmail = jwt.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
+        var companyId = jwt.Claims.FirstOrDefault(claim => claim.Type == "companyId")?.Value;
+
+        return new TokenPayload(userId!, userEmail!, companyId!);
+    }
+
     public (string, Guid) GenerateTokens(User user)
     {
         string accessToken = GenerateAccessToken(user);
@@ -73,7 +85,7 @@ public class TokenService : ITokenService
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddHours(expiresInHours),
+            expires: DateTime.UtcNow.AddHours(expiresInHours),
             signingCredentials: signingCredentials);
 
         var stringToken = tokenHandler.WriteToken(token);
