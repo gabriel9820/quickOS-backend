@@ -8,7 +8,6 @@ public class ApiResponse<T> where T : class
     public T? Data { get; private set; }
     public int ErrorCode { get; private set; }
     public string? ErrorMessage { get; private set; }
-    // public IEnumerable<string> Errors { get; private set; }
 
     private ApiResponse(bool success, T? data, HttpStatusCode? errorCode, string? errorMessage)
     {
