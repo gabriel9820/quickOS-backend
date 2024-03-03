@@ -4,5 +4,5 @@ namespace quickOS.Core.Services;
 
 public interface ITokenService
 {
-    string CreateAccessToken(User user);
+    (string, Guid) GenerateTokens(User user);
 }

@@ -10,6 +10,8 @@ public class User : BaseEntity
     public string Password { get; private set; }
     public bool IsActive { get; private set; }
     public Role Role { get; private set; }
+    public Guid? RefreshToken { get; private set; }
+    public DateTime? RefreshTokenExpiresIn { get; private set; }
 
     /* Foreign Keys */
     public int CompanyId { get; private set; }
@@ -17,16 +19,22 @@ public class User : BaseEntity
     /* Navigation */
     public Company Company { get; private set; }
 
-    public User() { }
+    private User() { }
 
-    public User(string fullName, string cellPhone, string email, string password, bool isActive, Role role, Company company)
+    public User(string fullName, string cellPhone, string email, string password, Role role, Company company)
     {
         FullName = fullName;
         CellPhone = cellPhone;
         Email = email;
         Password = password;
-        IsActive = isActive;
+        IsActive = true;
         Role = role;
         Company = company;
+    }
+
+    public void UpdateRefreshToken(Guid newRefreshToken)
+    {
+        RefreshToken = newRefreshToken;
+        RefreshTokenExpiresIn = DateTime.UtcNow.AddDays(7);
     }
 }

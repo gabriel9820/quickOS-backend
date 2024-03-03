@@ -17,7 +17,15 @@ public class TokenService : ITokenService
         _configuration = configuration;
     }
 
-    public string CreateAccessToken(User user)
+    public (string, Guid) GenerateTokens(User user)
+    {
+        string accessToken = GenerateAccessToken(user);
+        Guid refreshToken = GenerateRefreshToken();
+
+        return (accessToken, refreshToken);
+    }
+
+    private string GenerateAccessToken(User user)
     {
         var issuer = _configuration["Jwt:Issuer"];
         var audience = _configuration["Jwt:Audience"];
@@ -30,6 +38,7 @@ public class TokenService : ITokenService
         var claims = new List<Claim>
         {
             new Claim("id", user.ExternalId.ToString()),
+            new Claim(ClaimTypes.Email, user.Email),
             new Claim("role", user.Role.ToString()),
             new Claim("companyId", user.Company.ExternalId.ToString())
         };
@@ -45,5 +54,10 @@ public class TokenService : ITokenService
         var stringToken = tokenHandler.WriteToken(token);
 
         return stringToken;
+    }
+
+    private Guid GenerateRefreshToken()
+    {
+        return Guid.NewGuid();
     }
 }

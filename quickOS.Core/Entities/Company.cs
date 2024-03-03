@@ -8,11 +8,11 @@ public class Company : BaseEntity
     /* Navigation */
     public ICollection<User> Users { get; private set; }
 
-    public Company() { }
+    private Company() { }
 
-    public Company(string name, bool isActive)
+    public Company(string name)
     {
         Name = name;
-        IsActive = isActive;
+        IsActive = true;
     }
 }

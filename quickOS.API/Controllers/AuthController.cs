@@ -25,12 +25,24 @@ public class AuthController : ControllerBase
             return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
 
-        var user = result.Data!.User;
-        var accessToken = result.Data!.AccessToken;
+        SetTokensInCookies(result.Data!.AccessToken, result.Data!.RefreshToken);
 
-        Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        return Ok(result.Data!.User);
+    }
 
-        return Ok(user);
+    [HttpPost("refresh-token")]
+    public async Task<IActionResult> RefreshToken()
+    {
+        var result = await _authService.RefreshTokenAsync();
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        SetTokensInCookies(result.Data!.AccessToken, result.Data!.RefreshToken);
+
+        return NoContent();
     }
 
     [HttpPost("register")]
@@ -44,5 +56,11 @@ public class AuthController : ControllerBase
         }
 
         return Ok(result.Data);
+    }
+
+    private void SetTokensInCookies(string accessToken, Guid refreshToken)
+    {
+        Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        Response.Cookies.Append("X-Refresh-Token", refreshToken.ToString(), new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
     }
 }
