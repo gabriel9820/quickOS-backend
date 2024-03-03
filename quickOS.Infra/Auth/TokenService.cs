@@ -25,14 +25,37 @@ public class TokenService : ITokenService
         return (accessToken, refreshToken);
     }
 
+    public async Task<bool> ValidateAccessToken(string accessToken)
+    {
+        try
+        {
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = false,
+                ValidateIssuerSigningKey = true,
+
+                ValidIssuer = _configuration["Jwt:Issuer"],
+                ValidAudience = _configuration["Jwt:Audience"],
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]))
+            };
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var result = await tokenHandler.ValidateTokenAsync(accessToken, tokenValidationParameters);
+
+            return result.IsValid;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
     private string GenerateAccessToken(User user)
     {
-        var issuer = _configuration["Jwt:Issuer"];
-        var audience = _configuration["Jwt:Audience"];
-        var key = _configuration["Jwt:Key"];
-        var expiresInHours = double.Parse(_configuration["Jwt:ExpiresInHours"]);
-
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
         var signingCredentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim>
@@ -43,10 +66,12 @@ public class TokenService : ITokenService
             new Claim("companyId", user.Company.ExternalId.ToString())
         };
 
+        var expiresInHours = double.Parse(_configuration["Jwt:ExpiresInHours"]);
+
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
+            issuer: _configuration["Jwt:Issuer"],
+            audience: _configuration["Jwt:Audience"],
             claims: claims,
             expires: DateTime.Now.AddHours(expiresInHours),
             signingCredentials: signingCredentials);

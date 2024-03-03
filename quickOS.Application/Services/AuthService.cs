@@ -58,11 +58,18 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<TokensOutputModel>> RefreshTokenAsync()
     {
+        var isExpiredTokenValid = await _tokenService.ValidateAccessToken(_requestProvider.AccessToken);
+
+        if (!isExpiredTokenValid)
+        {
+            return ApiResponse<TokensOutputModel>.Error(HttpStatusCode.BadRequest);
+        }
+
         var user = await _userRepository.GetByEmailAsync(_requestProvider.UserEmail);
 
         if (user == null || !user.RefreshToken.Equals(_requestProvider.RefreshToken) || user.RefreshTokenExpiresIn <= DateTime.UtcNow)
         {
-            return ApiResponse<TokensOutputModel>.Error(HttpStatusCode.BadRequest, "RefreshToken inválido");
+            return ApiResponse<TokensOutputModel>.Error(HttpStatusCode.BadRequest);
         }
 
         var (newAccessToken, newRefreshToken) = _tokenService.GenerateTokens(user);
