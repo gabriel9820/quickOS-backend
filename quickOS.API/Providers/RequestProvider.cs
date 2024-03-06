@@ -5,9 +5,9 @@ namespace quickOS.API.Providers;
 
 public class RequestProvider : IRequestProvider
 {
-    public Guid UserId { get; } = Guid.Empty;
+    public int UserId { get; }
     public string UserEmail { get; } = string.Empty;
-    public Guid CompanyId { get; } = Guid.Empty;
+    public int CompanyId { get; }
     public string AccessToken { get; } = string.Empty;
     public Guid RefreshToken { get; } = Guid.Empty;
 

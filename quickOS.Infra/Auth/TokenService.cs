@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using quickOS.Core.Entities;
+using quickOS.Core.Models;
 using quickOS.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -72,10 +73,10 @@ public class TokenService : ITokenService
 
         var claims = new List<Claim>
         {
-            new Claim("id", user.ExternalId.ToString()),
+            new Claim("id", user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim("role", user.Role.ToString()),
-            new Claim("companyId", user.Company.ExternalId.ToString())
+            new Claim("companyId", user.Company.Id.ToString())
         };
 
         var expiresInHours = double.Parse(_configuration["Jwt:ExpiresInHours"]);

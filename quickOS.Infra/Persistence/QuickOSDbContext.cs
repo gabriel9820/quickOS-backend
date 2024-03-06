@@ -1,19 +1,28 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using quickOS.Application.Interfaces;
 using quickOS.Core.Entities;
 
 namespace quickOS.Infra.Persistence;
 
 public class QuickOSDbContext : DbContext
 {
+    private IRequestProvider _requestProvider;
+
     public DbSet<User> Users { get; set; }
     public DbSet<Company> Companies { get; set; }
+    public DbSet<ServiceProvided> ServicesProvided { get; set; }
 
-    public QuickOSDbContext(DbContextOptions<QuickOSDbContext> options) : base(options) { }
+    public QuickOSDbContext(DbContextOptions<QuickOSDbContext> options, IRequestProvider requestProvider) : base(options)
+    {
+        _requestProvider = requestProvider;
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+        modelBuilder.Entity<ServiceProvided>().HasQueryFilter(s => s.CompanyId == _requestProvider.CompanyId);
 
         base.OnModelCreating(modelBuilder);
     }
@@ -32,6 +41,16 @@ public class QuickOSDbContext : DbContext
                     break;
                 case EntityState.Modified:
                     entry.Entity.SetUpdatedAt(now);
+                    break;
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<MultiTenantEntity>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    entry.Entity.SetTenantId(_requestProvider.CompanyId);
                     break;
             }
         }

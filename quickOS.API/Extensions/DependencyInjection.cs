@@ -92,6 +92,7 @@ public static class DependencyInjection
         services.AddScoped<IRequestProvider, RequestProvider>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<IServiceProvidedService, ServiceProvidedService>();
 
         return services;
     }
@@ -103,6 +104,7 @@ public static class DependencyInjection
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<IServiceProvidedRepository, ServiceProvidedRepository>();
 
         return services;
     }

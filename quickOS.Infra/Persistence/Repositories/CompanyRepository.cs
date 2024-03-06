@@ -13,18 +13,13 @@ public class CompanyRepository : ICompanyRepository
         _dbContext = dbContext;
     }
 
-    public async Task<Company> CreateAsync(Company company)
+    public async Task CreateAsync(Company company)
     {
         await _dbContext.Companies.AddAsync(company);
-        return company;
     }
 
-    public async Task<Company?> GetByExternalIdAsync(Guid externalId)
+    public async Task<Company?> GetByIdAsync(int id)
     {
-        var company = await _dbContext.Companies
-            .AsNoTracking()
-            .SingleOrDefaultAsync(c => c.ExternalId == externalId);
-
-        return company;
+        return await _dbContext.Companies.SingleOrDefaultAsync(c => c.Id == id);
     }
 }

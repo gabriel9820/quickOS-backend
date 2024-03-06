@@ -13,5 +13,8 @@ public class AutoMapperProfiles : Profile
         CreateMap<Company, CompanyOutputModel>();
 
         CreateMap<User, UserOutputModel>();
+
+        CreateMap<ServiceProvidedInputModel, ServiceProvided>();
+        CreateMap<ServiceProvided, ServiceProvidedOutputModel>();
     }
 }

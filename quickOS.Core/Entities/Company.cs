@@ -7,6 +7,7 @@ public class Company : BaseEntity
 
     /* Navigation */
     public ICollection<User> Users { get; private set; }
+    public ICollection<ServiceProvided> ServicesProvided { get; private set; }
 
     private Company() { }
 

@@ -21,8 +21,7 @@ public class CompanyService : ICompanyService
 
     public async Task<ApiResponse<CompanyOutputModel>> GetCurrentAsync()
     {
-        var externalId = _requestProvider.CompanyId;
-        var company = await _companyRepository.GetByExternalIdAsync(externalId);
+        var company = await _companyRepository.GetByIdAsync(_requestProvider.CompanyId);
 
         if (company == null)
         {

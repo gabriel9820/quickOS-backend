@@ -2,9 +2,9 @@
 
 public interface IRequestProvider
 {
-    Guid UserId { get; }
+    int UserId { get; }
     string UserEmail { get; }
-    Guid CompanyId { get; }
+    int CompanyId { get; }
     string AccessToken { get; }
     Guid RefreshToken { get; }
 }
