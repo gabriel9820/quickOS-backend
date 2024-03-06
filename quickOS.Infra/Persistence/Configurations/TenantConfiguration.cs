@@ -4,9 +4,9 @@ using quickOS.Core.Entities;
 
 namespace quickOS.Infra.Persistence.Configurations;
 
-public class CompanyConfiguration : IEntityTypeConfiguration<Company>
+public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 {
-    public void Configure(EntityTypeBuilder<Company> builder)
+    public void Configure(EntityTypeBuilder<Tenant> builder)
     {
         builder.HasKey(u => u.Id);
 
@@ -22,8 +22,8 @@ public class CompanyConfiguration : IEntityTypeConfiguration<Company>
         builder.Property(u => u.IsActive).IsRequired();
 
         builder
-            .HasMany(c => c.Users)
-            .WithOne(u => u.Company)
-            .HasForeignKey(u => u.CompanyId);
+            .HasMany(t => t.Users)
+            .WithOne(u => u.Tenant)
+            .HasForeignKey(u => u.TenantId);
     }
 }

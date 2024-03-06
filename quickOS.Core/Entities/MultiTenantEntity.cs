@@ -2,13 +2,13 @@
 
 public abstract class MultiTenantEntity : BaseEntity
 {
-    public int CompanyId { get; private set; }
-    public Company Company { get; private set; }
+    public int TenantId { get; private set; }
+    public Tenant Tenant { get; private set; }
 
     protected MultiTenantEntity() { }
 
     public void SetTenantId(int tenantId)
     {
-        CompanyId = tenantId;
+        TenantId = tenantId;
     }
 }

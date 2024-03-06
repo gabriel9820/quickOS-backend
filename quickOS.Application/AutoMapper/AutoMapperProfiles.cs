@@ -9,8 +9,8 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        CreateMap<CompanyInputModel, Company>();
-        CreateMap<Company, CompanyOutputModel>();
+        CreateMap<TenantInputModel, Tenant>();
+        CreateMap<Tenant, TenantOutputModel>();
 
         CreateMap<User, UserOutputModel>();
 

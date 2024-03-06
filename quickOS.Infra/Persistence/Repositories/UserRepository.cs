@@ -21,7 +21,7 @@ public class UserRepository : IUserRepository
     public async Task<User?> GetByEmailAsync(string email)
     {
         return await _dbContext.Users
-            .Include(u => u.Company)
+            .Include(u => u.Tenant)
             .SingleOrDefaultAsync(u => u.Email == email);
     }
 

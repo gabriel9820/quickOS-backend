@@ -25,9 +25,9 @@ public class TokenService : ITokenService
 
         var userId = jwt.Claims.FirstOrDefault(claim => claim.Type == "id")?.Value;
         var userEmail = jwt.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
-        var companyId = jwt.Claims.FirstOrDefault(claim => claim.Type == "companyId")?.Value;
+        var tenantId = jwt.Claims.FirstOrDefault(claim => claim.Type == "tenantId")?.Value;
 
-        return new TokenPayload(userId!, userEmail!, companyId!);
+        return new TokenPayload(userId!, userEmail!, tenantId!);
     }
 
     public (string, Guid) GenerateTokens(User user)
@@ -76,7 +76,7 @@ public class TokenService : ITokenService
             new Claim("id", user.Id.ToString()),
             new Claim(ClaimTypes.Email, user.Email),
             new Claim("role", user.Role.ToString()),
-            new Claim("companyId", user.Company.Id.ToString())
+            new Claim("tenantId", user.Tenant.Id.ToString())
         };
 
         var expiresInHours = double.Parse(_configuration["Jwt:ExpiresInHours"]);

@@ -2,7 +2,7 @@
 
 namespace quickOS.Application.Interfaces;
 
-public interface ICompanyService
+public interface ITenantService
 {
-    Task<ApiResponse<CompanyOutputModel>> GetCurrentAsync();
+    Task<ApiResponse<TenantOutputModel>> GetCurrentAsync();
 }

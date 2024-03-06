@@ -10,7 +10,7 @@ public class QuickOSDbContext : DbContext
     private IRequestProvider _requestProvider;
 
     public DbSet<User> Users { get; set; }
-    public DbSet<Company> Companies { get; set; }
+    public DbSet<Tenant> Tenants { get; set; }
     public DbSet<ServiceProvided> ServicesProvided { get; set; }
 
     public QuickOSDbContext(DbContextOptions<QuickOSDbContext> options, IRequestProvider requestProvider) : base(options)
@@ -22,7 +22,7 @@ public class QuickOSDbContext : DbContext
     {
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
-        modelBuilder.Entity<ServiceProvided>().HasQueryFilter(s => s.CompanyId == _requestProvider.CompanyId);
+        modelBuilder.Entity<ServiceProvided>().HasQueryFilter(s => s.TenantId == _requestProvider.TenantId);
 
         base.OnModelCreating(modelBuilder);
     }
@@ -50,7 +50,7 @@ public class QuickOSDbContext : DbContext
             switch (entry.State)
             {
                 case EntityState.Added:
-                    entry.Entity.SetTenantId(_requestProvider.CompanyId);
+                    entry.Entity.SetTenantId(_requestProvider.TenantId);
                     break;
             }
         }

@@ -1,6 +1,6 @@
 ﻿namespace quickOS.Core.Entities;
 
-public class Company : BaseEntity
+public class Tenant : BaseEntity
 {
     public string Name { get; private set; }
     public bool IsActive { get; private set; }
@@ -9,9 +9,9 @@ public class Company : BaseEntity
     public ICollection<User> Users { get; private set; }
     public ICollection<ServiceProvided> ServicesProvided { get; private set; }
 
-    private Company() { }
+    private Tenant() { }
 
-    public Company(string name)
+    public Tenant(string name)
     {
         Name = name;
         IsActive = true;

@@ -91,7 +91,7 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(AutoMapperProfiles));
         services.AddScoped<IRequestProvider, RequestProvider>();
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IServiceProvidedService, ServiceProvidedService>();
 
         return services;
@@ -103,7 +103,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<ICompanyRepository, CompanyRepository>();
+        services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<IServiceProvidedRepository, ServiceProvidedRepository>();
 
         return services;

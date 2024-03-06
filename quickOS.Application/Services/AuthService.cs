@@ -14,7 +14,7 @@ namespace quickOS.Application.Services;
 public class AuthService : IAuthService
 {
     private readonly IUserRepository _userRepository;
-    private readonly ICompanyRepository _companyRepository;
+    private readonly ITenantRepository _tenantRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly IRequestProvider _requestProvider;
@@ -22,14 +22,14 @@ public class AuthService : IAuthService
 
     public AuthService(
         IUserRepository userRepository,
-        ICompanyRepository companyRepository,
+        ITenantRepository tenantRepository,
         IUnitOfWork unitOfWork,
         ITokenService tokenService,
         IRequestProvider requestProvider,
         IMapper mapper)
     {
         _userRepository = userRepository;
-        _companyRepository = companyRepository;
+        _tenantRepository = tenantRepository;
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _requestProvider = requestProvider;
@@ -91,8 +91,8 @@ public class AuthService : IAuthService
             return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O email informado já está em uso");
         }
 
-        var company = new Company(registerInputModel.CompanyName);
-        await _companyRepository.CreateAsync(company);
+        var tenant = new Tenant(registerInputModel.TenantName);
+        await _tenantRepository.CreateAsync(tenant);
 
         var user = new User(
             registerInputModel.FullName,
@@ -100,7 +100,7 @@ public class AuthService : IAuthService
             registerInputModel.Email,
             BC.HashPassword(registerInputModel.Password),
             Role.Admin,
-            company
+            tenant
         );
         await _userRepository.CreateAsync(user);
 

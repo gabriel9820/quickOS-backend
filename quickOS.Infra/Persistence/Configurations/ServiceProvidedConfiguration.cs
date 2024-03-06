@@ -11,7 +11,7 @@ public class ServiceProvidedConfiguration : IEntityTypeConfiguration<ServiceProv
         builder.HasKey(s => s.Id);
 
         builder.HasIndex(s => s.ExternalId).IsUnique();
-        builder.HasIndex(s => new { s.Code, s.CompanyId }).IsUnique();
+        builder.HasIndex(s => new { s.Code, s.TenantId }).IsUnique();
 
         builder.Property(s => s.CreatedAt).IsRequired();
         builder.Property(s => s.UpdatedAt).IsRequired();
@@ -29,8 +29,8 @@ public class ServiceProvidedConfiguration : IEntityTypeConfiguration<ServiceProv
         builder.Property(s => s.IsActive).IsRequired();
 
         builder
-            .HasOne(s => s.Company)
-            .WithMany(c => c.ServicesProvided)
-            .HasForeignKey(s => s.CompanyId);
+            .HasOne(s => s.Tenant)
+            .WithMany(t => t.ServicesProvided)
+            .HasForeignKey(s => s.TenantId);
     }
 }

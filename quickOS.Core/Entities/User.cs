@@ -14,14 +14,14 @@ public class User : BaseEntity
     public DateTime? RefreshTokenExpiresIn { get; private set; }
 
     /* Foreign Keys */
-    public int CompanyId { get; private set; }
+    public int TenantId { get; private set; }
 
     /* Navigation */
-    public Company Company { get; private set; }
+    public Tenant Tenant { get; private set; }
 
     private User() { }
 
-    public User(string fullName, string cellPhone, string email, string password, Role role, Company company)
+    public User(string fullName, string cellPhone, string email, string password, Role role, Tenant tenant)
     {
         FullName = fullName;
         CellPhone = cellPhone;
@@ -29,7 +29,7 @@ public class User : BaseEntity
         Password = password;
         IsActive = true;
         Role = role;
-        Company = company;
+        Tenant = tenant;
     }
 
     public void UpdateRefreshToken(Guid newRefreshToken)

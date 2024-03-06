@@ -7,7 +7,7 @@ public class RequestProvider : IRequestProvider
 {
     public int UserId { get; }
     public string UserEmail { get; } = string.Empty;
-    public int CompanyId { get; }
+    public int TenantId { get; }
     public string AccessToken { get; } = string.Empty;
     public Guid RefreshToken { get; } = Guid.Empty;
 
@@ -25,7 +25,7 @@ public class RequestProvider : IRequestProvider
 
             UserId = payload.UserId;
             UserEmail = payload.UserEmail;
-            CompanyId = payload.CompanyId;
+            TenantId = payload.TenantId;
             AccessToken = accessTokenCookie;
         }
 

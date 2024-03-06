@@ -4,22 +4,22 @@ using quickOS.Application.Interfaces;
 
 namespace quickOS.API.Controllers;
 
-[Route("api/company")]
+[Route("api/tenant")]
 [ApiController]
 [Authorize]
-public class CompanyController : ControllerBase
+public class TenantController : ControllerBase
 {
-    private readonly ICompanyService _companyService;
+    private readonly ITenantService _tenantService;
 
-    public CompanyController(ICompanyService companyService)
+    public TenantController(ITenantService tenantService)
     {
-        _companyService = companyService;
+        _tenantService = tenantService;
     }
 
     [HttpGet("current")]
     public async Task<IActionResult> GetCurrent()
     {
-        var result = await _companyService.GetCurrentAsync();
+        var result = await _tenantService.GetCurrentAsync();
 
         if (!result.Success)
         {

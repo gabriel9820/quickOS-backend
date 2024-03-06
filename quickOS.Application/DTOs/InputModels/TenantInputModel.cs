@@ -2,7 +2,7 @@
 
 namespace quickOS.Application.DTOs.InputModels;
 
-public class CompanyInputModel
+public class TenantInputModel
 {
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [MinLength(1, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
