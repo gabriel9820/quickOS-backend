@@ -55,7 +55,7 @@ public class AuthController : ControllerBase
             return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
 
-        return Ok(result.Data);
+        return Created("", result.Data);
     }
 
     private void SetTokensInCookies(string accessToken, Guid refreshToken)

@@ -1,9 +1,12 @@
-﻿using System.Net;
+﻿using System.Linq.Expressions;
+using System.Net;
 using AutoMapper;
+using LinqKit;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.DTOs.OutputModels;
 using quickOS.Application.Interfaces;
 using quickOS.Core.Entities;
+using quickOS.Core.Models;
 using quickOS.Core.Repositories;
 
 namespace quickOS.Application.Services;
@@ -48,12 +51,27 @@ public class ServiceProvidedService : IServiceProvidedService
         return ApiResponse.Ok();
     }
 
-    public async Task<ApiResponse<IEnumerable<ServiceProvidedOutputModel>>> GetAllAsync()
+    public async Task<ApiResponse<PagedResult<ServiceProvidedOutputModel>>> GetAllAsync(ServiceProvidedQueryParams queryParams)
     {
-        var services = await _serviceProvidedRepository.GetAllAsync();
-        var result = _mapper.Map<IEnumerable<ServiceProvidedOutputModel>>(services);
+        var filters = GetFilters(queryParams);
+        var orderBy = GetOrderByField(queryParams);
 
-        return ApiResponse<IEnumerable<ServiceProvidedOutputModel>>.Ok(result);
+        var services = await _serviceProvidedRepository.GetAllAsync(
+            filters,
+            orderBy,
+            queryParams.OrderDirection,
+            queryParams.CurrentPage,
+            queryParams.PageSize);
+        var servicesDTO = _mapper.Map<IEnumerable<ServiceProvidedOutputModel>>(services.Data);
+
+        var result = new PagedResult<ServiceProvidedOutputModel>(
+            services.CurrentPage,
+            services.TotalPages,
+            services.PageSize,
+            services.TotalCount,
+            servicesDTO);
+
+        return ApiResponse<PagedResult<ServiceProvidedOutputModel>>.Ok(result);
     }
 
     public async Task<ApiResponse<ServiceProvidedOutputModel>> GetByExternalIdAsync(Guid externalId)
@@ -89,5 +107,31 @@ public class ServiceProvidedService : IServiceProvidedService
         var result = _mapper.Map<ServiceProvidedOutputModel>(service);
 
         return ApiResponse<ServiceProvidedOutputModel>.Ok(result);
+    }
+
+    private ExpressionStarter<ServiceProvided>? GetFilters(ServiceProvidedQueryParams queryParams)
+    {
+        var predicate = PredicateBuilder.New<ServiceProvided>(true);
+
+        if (queryParams.Code > 0)
+        {
+            predicate = predicate.And(x => x.Code == queryParams.Code);
+        }
+        if (!string.IsNullOrEmpty(queryParams.Name))
+        {
+            predicate = predicate.And(x => x.Name.Contains(queryParams.Name));
+        }
+
+        return predicate;
+    }
+
+    private Expression<Func<ServiceProvided, object>>? GetOrderByField(ServiceProvidedQueryParams queryParams)
+    {
+        return queryParams.OrderBy switch
+        {
+            nameof(ServiceProvided.Code) => x => x.Code,
+            nameof(ServiceProvided.Name) => x => x.Name,
+            _ => null,
+        };
     }
 }

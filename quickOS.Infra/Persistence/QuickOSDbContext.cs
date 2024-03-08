@@ -7,7 +7,7 @@ namespace quickOS.Infra.Persistence;
 
 public class QuickOSDbContext : DbContext
 {
-    private IRequestProvider _requestProvider;
+    private readonly IRequestProvider _requestProvider;
 
     public DbSet<User> Users { get; set; }
     public DbSet<Tenant> Tenants { get; set; }

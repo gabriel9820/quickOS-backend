@@ -7,7 +7,7 @@ namespace quickOS.API;
 
 [Route("api/service-provided")]
 [ApiController]
-[Authorize]
+[Authorize(Roles = "Admin")]
 public class ServiceProvidedController : ControllerBase
 {
     private readonly IServiceProvidedService _serviceProvidedService;
@@ -18,9 +18,9 @@ public class ServiceProvidedController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll([FromQuery] ServiceProvidedQueryParams queryParams)
     {
-        var result = await _serviceProvidedService.GetAllAsync();
+        var result = await _serviceProvidedService.GetAllAsync(queryParams);
 
         if (!result.Success)
         {
@@ -53,7 +53,7 @@ public class ServiceProvidedController : ControllerBase
             return StatusCode(result.ErrorCode, result.ErrorMessage);
         }
 
-        return Ok(result.Data);
+        return CreatedAtAction(nameof(GetByExternalId), new { externalId = result.Data!.ExternalId }, result.Data);
     }
 
     [HttpPut("{externalId:Guid}")]
