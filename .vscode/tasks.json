@@ -46,7 +46,7 @@
             "dockerBuild": {
                 "tag": "quickosbackend:dev",
                 "target": "base",
-                "dockerfile": "${workspaceFolder}/quickOS.API/Dockerfile",
+                "dockerfile": "${workspaceFolder}/Dockerfile",
                 "context": "${workspaceFolder}",
                 "pull": true
             },
@@ -62,7 +62,7 @@
             ],
             "dockerBuild": {
                 "tag": "quickosbackend:latest",
-                "dockerfile": "${workspaceFolder}/quickOS.API/Dockerfile",
+                "dockerfile": "${workspaceFolder}/Dockerfile",
                 "context": "${workspaceFolder}",
                 "platform": {
                     "os": "linux",
