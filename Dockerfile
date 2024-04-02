@@ -9,6 +9,9 @@ FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG configuration=Release
 WORKDIR /src
 COPY ["quickOS.API/quickOS.API.csproj", "quickOS.API/"]
+COPY ["quickOS.Application/quickOS.Application.csproj", "quickOS.Application/"]
+COPY ["quickOS.Core/quickOS.Core.csproj", "quickOS.Core/"]
+COPY ["quickOS.Infra/quickOS.Infra.csproj", "quickOS.Infra/"]
 RUN dotnet restore "quickOS.API/quickOS.API.csproj"
 COPY . .
 WORKDIR "/src/quickOS.API"
