@@ -31,7 +31,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors(options => options
-    .WithOrigins(["http://localhost:5173"])
+    .WithOrigins([builder.Configuration["Jwt:Audience"]])
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()
