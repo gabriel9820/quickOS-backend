@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "<your-ecr-repo-uri>:latest",
+    "Name": "452329617479.dkr.ecr.us-east-1.amazonaws.com/quick-os-backend:latest",
     "Update": "true"
   },
   "Ports": [
