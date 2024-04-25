@@ -7,7 +7,12 @@ public class RegisterInputModel
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [MinLength(1, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
     [MaxLength(200, ErrorMessage = "O campo {0} deve conter no máximo {1} caracteres")]
-    public string FullName { get; set; } = string.Empty;
+    public string TenantName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [MinLength(1, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
+    [MaxLength(200, ErrorMessage = "O campo {0} deve conter no máximo {1} caracteres")]
+    public string OwnerName { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [StringLength(14, ErrorMessage = "O campo {0} deve conter {1} caracteres")]
@@ -24,13 +29,5 @@ public class RegisterInputModel
     [MinLength(8, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
     public string Password { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [MinLength(8, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
-    [Compare("Password", ErrorMessage = "As senhas não correspondem")]
-    public string ConfirmPassword { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [MinLength(1, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
-    [MaxLength(200, ErrorMessage = "O campo {0} deve conter no máximo {1} caracteres")]
-    public string TenantName { get; set; } = string.Empty;
 }

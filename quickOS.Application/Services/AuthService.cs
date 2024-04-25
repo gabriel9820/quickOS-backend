@@ -95,7 +95,7 @@ public class AuthService : IAuthService
         await _tenantRepository.CreateAsync(tenant);
 
         var user = new User(
-            registerInputModel.FullName,
+            registerInputModel.OwnerName,
             registerInputModel.CellPhone,
             registerInputModel.Email,
             BC.HashPassword(registerInputModel.Password),
