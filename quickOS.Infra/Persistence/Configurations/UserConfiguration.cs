@@ -23,7 +23,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder.Property(u => u.CellPhone)
-            .HasMaxLength(14)
+            .HasMaxLength(15)
             .IsFixedLength()
             .IsRequired();
 

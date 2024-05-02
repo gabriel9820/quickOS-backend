@@ -15,6 +15,12 @@ public class AuthController : ControllerBase
         _authService = authService;
     }
 
+    [HttpPost("forgot-password")]
+    public async Task<IActionResult> ForgotPassword()
+    {
+        return NoContent();
+    }
+
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginInputModel loginInputModel)
     {
