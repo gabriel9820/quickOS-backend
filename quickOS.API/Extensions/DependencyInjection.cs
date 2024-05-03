@@ -99,8 +99,6 @@ public static class DependencyInjection
 
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        Console.WriteLine("GetConnectionString: " + configuration.GetConnectionString("quickOS"));
-
         services.AddDbContext<QuickOSDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("quickOS")));
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, TokenService>();

@@ -30,8 +30,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-Console.WriteLine("Front URL: " + builder.Configuration["Jwt:Audience"]);
-
 app.UseCors(options => options
     .WithOrigins([builder.Configuration["Jwt:Audience"]])
     .AllowAnyHeader()
