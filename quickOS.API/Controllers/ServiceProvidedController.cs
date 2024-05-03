@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.Interfaces;
 
-namespace quickOS.API;
+namespace quickOS.API.Controllers;
 
 [Route("api/service-provided")]
 [ApiController]
