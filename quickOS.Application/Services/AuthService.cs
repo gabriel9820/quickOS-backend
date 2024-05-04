@@ -47,11 +47,12 @@ public class AuthService : IAuthService
 
         var (accessToken, refreshToken) = _tokenService.GenerateTokens(user);
         var authenticatedUser = _mapper.Map<UserOutputModel>(user);
+        var tenant = _mapper.Map<TenantOutputModel>(user.Tenant);
 
         user.UpdateRefreshToken(refreshToken);
         await _unitOfWork.SaveChangesAsync();
 
-        var result = new LoginOutputModel(accessToken, refreshToken, authenticatedUser);
+        var result = new LoginOutputModel(accessToken, refreshToken, authenticatedUser, tenant);
 
         return ApiResponse<LoginOutputModel>.Ok(result);
     }

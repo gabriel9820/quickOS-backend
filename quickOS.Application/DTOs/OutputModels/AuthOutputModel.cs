@@ -15,9 +15,11 @@ public class TokensOutputModel
 public class LoginOutputModel : TokensOutputModel
 {
     public UserOutputModel User { get; private set; }
+    public TenantOutputModel Tenant { get; private set; }
 
-    public LoginOutputModel(string accessToken, Guid refreshToken, UserOutputModel user) : base(accessToken, refreshToken)
+    public LoginOutputModel(string accessToken, Guid refreshToken, UserOutputModel user, TenantOutputModel tenant) : base(accessToken, refreshToken)
     {
         User = user;
+        Tenant = tenant;
     }
 }
