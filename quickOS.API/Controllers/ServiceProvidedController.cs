@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.Interfaces;
 
-namespace quickOS.API;
+namespace quickOS.API.Controllers;
 
 [Route("api/service-provided")]
 [ApiController]
-[Authorize(Roles = "Admin")]
+[Authorize]
 public class ServiceProvidedController : ControllerBase
 {
     private readonly IServiceProvidedService _serviceProvidedService;
@@ -44,6 +44,7 @@ public class ServiceProvidedController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] ServiceProvidedInputModel serviceInputModel)
     {
         var result = await _serviceProvidedService.CreateAsync(serviceInputModel);
@@ -57,6 +58,7 @@ public class ServiceProvidedController : ControllerBase
     }
 
     [HttpPut("{externalId:Guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Update(Guid externalId, [FromBody] ServiceProvidedInputModel serviceInputModel)
     {
         var result = await _serviceProvidedService.UpdateAsync(externalId, serviceInputModel);
@@ -70,6 +72,7 @@ public class ServiceProvidedController : ControllerBase
     }
 
     [HttpDelete("{externalId:Guid}")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid externalId)
     {
         var result = await _serviceProvidedService.DeleteAsync(externalId);

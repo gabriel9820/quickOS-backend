@@ -33,7 +33,7 @@ public class AuthController : ControllerBase
 
         SetTokensInCookies(result.Data!.AccessToken, result.Data!.RefreshToken);
 
-        return Ok(result.Data!.User);
+        return Ok(new { result.Data!.User, result.Data!.Tenant });
     }
 
     [HttpPost("refresh-token")]
