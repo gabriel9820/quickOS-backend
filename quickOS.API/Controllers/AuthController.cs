@@ -66,7 +66,7 @@ public class AuthController : ControllerBase
 
     private void SetTokensInCookies(string accessToken, Guid refreshToken)
     {
-        Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
-        Response.Cookies.Append("X-Refresh-Token", refreshToken.ToString(), new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.Strict });
+        Response.Cookies.Append("X-Access-Token", accessToken, new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true });
+        Response.Cookies.Append("X-Refresh-Token", refreshToken.ToString(), new CookieOptions() { HttpOnly = true, SameSite = SameSiteMode.None, Secure = true });
     }
 }
