@@ -43,6 +43,20 @@ public class ServiceProvidedController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("next-code")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> GetNextCode()
+    {
+        var result = await _serviceProvidedService.GetNextCode();
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return Ok(result.Data);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([FromBody] ServiceProvidedInputModel serviceInputModel)

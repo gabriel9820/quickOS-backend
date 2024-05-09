@@ -10,5 +10,6 @@ public interface IServiceProvidedService
     Task<ApiResponse> DeleteAsync(Guid externalId);
     Task<ApiResponse<PagedResult<ServiceProvidedOutputModel>>> GetAllAsync(ServiceProvidedQueryParams queryParams);
     Task<ApiResponse<ServiceProvidedOutputModel>> GetByExternalIdAsync(Guid externalId);
+    Task<ApiResponse<int>> GetNextCode();
     Task<ApiResponse<ServiceProvidedOutputModel>> UpdateAsync(Guid externalId, ServiceProvidedInputModel serviceInputModel);
 }

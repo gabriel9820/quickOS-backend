@@ -88,6 +88,13 @@ public class ServiceProvidedService : IServiceProvidedService
         return ApiResponse<ServiceProvidedOutputModel>.Ok(result);
     }
 
+    public async Task<ApiResponse<int>> GetNextCode()
+    {
+        var nextCode = await _serviceProvidedRepository.GetNextCode();
+
+        return ApiResponse<int>.Ok(nextCode);
+    }
+
     public async Task<ApiResponse<ServiceProvidedOutputModel>> UpdateAsync(Guid externalId, ServiceProvidedInputModel serviceInputModel)
     {
         var service = await _serviceProvidedRepository.GetByExternalIdAsync(externalId);

@@ -15,5 +15,6 @@ public interface IServiceProvidedRepository
         int currentPage,
         int pageSize);
     Task<ServiceProvided?> GetByExternalIdAsync(Guid externalId);
+    Task<int> GetNextCode();
     void Update(ServiceProvided service);
 }

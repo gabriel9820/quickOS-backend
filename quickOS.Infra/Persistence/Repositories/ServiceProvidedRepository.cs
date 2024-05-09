@@ -60,6 +60,12 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
         return await _dbContext.ServicesProvided.SingleOrDefaultAsync(s => s.ExternalId == externalId);
     }
 
+    public async Task<int> GetNextCode()
+    {
+        var lastCode = await _dbContext.ServicesProvided.MaxAsync(e => (int?)e.Code) ?? 0;
+        return ++lastCode;
+    }
+
     public void Update(ServiceProvided service)
     {
         _dbContext.ServicesProvided.Update(service);

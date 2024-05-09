@@ -26,7 +26,7 @@ public class ApiResponse
     }
 }
 
-public class ApiResponse<T> : ApiResponse where T : class
+public class ApiResponse<T> : ApiResponse
 {
     public T? Data { get; private set; }
 
@@ -35,13 +35,13 @@ public class ApiResponse<T> : ApiResponse where T : class
         Data = data;
     }
 
-    public static ApiResponse<T> Ok(T? data = null)
+    public static ApiResponse<T> Ok(T? data = default)
     {
         return new ApiResponse<T>(true, data, null, null);
     }
 
     public static new ApiResponse<T> Error(HttpStatusCode errorCode, string? errorMessage = null)
     {
-        return new ApiResponse<T>(false, null, errorCode, errorMessage);
+        return new ApiResponse<T>(false, default, errorCode, errorMessage);
     }
 }
