@@ -25,6 +25,11 @@ public class UserRepository : IUserRepository
             .SingleOrDefaultAsync(u => u.Email == email);
     }
 
+    public async Task<bool> VerifyCellphoneInUseAsync(string cellphone)
+    {
+        return await _dbContext.Users.AsNoTracking().AnyAsync(u => u.CellPhone == cellphone);
+    }
+
     public async Task<bool> VerifyEmailInUseAsync(string email)
     {
         return await _dbContext.Users.AsNoTracking().AnyAsync(u => u.Email == email);
