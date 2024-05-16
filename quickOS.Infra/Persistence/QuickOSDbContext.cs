@@ -12,6 +12,7 @@ public class QuickOSDbContext : DbContext
     public DbSet<User> Users { get; set; }
     public DbSet<Tenant> Tenants { get; set; }
     public DbSet<ServiceProvided> ServicesProvided { get; set; }
+    public DbSet<UnitOfMeasurement> UnitsOfMeasurement { get; set; }
 
     public QuickOSDbContext(DbContextOptions<QuickOSDbContext> options, IRequestProvider requestProvider) : base(options)
     {
@@ -20,11 +21,13 @@ public class QuickOSDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         modelBuilder.Entity<ServiceProvided>().HasQueryFilter(s => s.TenantId == _requestProvider.TenantId);
 
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Seed();
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())

@@ -93,6 +93,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITenantService, TenantService>();
         services.AddScoped<IServiceProvidedService, ServiceProvidedService>();
+        services.AddScoped<IUnitOfMeasurementService, UnitOfMeasurementService>();
 
         return services;
     }
@@ -105,6 +106,7 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<IServiceProvidedRepository, ServiceProvidedRepository>();
+        services.AddScoped<IUnitOfMeasurementRepository, UnitOfMeasurementRepository>();
 
         return services;
     }

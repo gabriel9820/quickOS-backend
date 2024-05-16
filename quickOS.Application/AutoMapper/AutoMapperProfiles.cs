@@ -16,5 +16,7 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<ServiceProvidedInputModel, ServiceProvided>();
         CreateMap<ServiceProvided, ServiceProvidedOutputModel>();
+
+        CreateMap<UnitOfMeasurement, UnitOfMeasurementOutputModel>();
     }
 }

@@ -12,6 +12,14 @@ public abstract class BaseEntity
         ExternalId = Guid.NewGuid();
     }
 
+    protected BaseEntity(int id)
+    {
+        Id = id;
+        ExternalId = Guid.NewGuid();
+        CreatedAt = DateTime.UtcNow;
+        UpdatedAt = DateTime.UtcNow;
+    }
+
     public void SetCreatedAt(DateTime now)
     {
         CreatedAt = now;

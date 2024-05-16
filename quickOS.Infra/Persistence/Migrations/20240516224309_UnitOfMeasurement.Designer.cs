@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using quickOS.Infra.Persistence;
@@ -11,9 +12,11 @@ using quickOS.Infra.Persistence;
 namespace quickOS.Infra.Persistence.Migrations
 {
     [DbContext(typeof(QuickOSDbContext))]
-    partial class QuickOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240516224309_UnitOfMeasurement")]
+    partial class UnitOfMeasurement
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -146,108 +149,6 @@ namespace quickOS.Infra.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("UnitsOfMeasurement");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Abbreviation = "un",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6629),
-                            ExternalId = new Guid("b25719f0-d241-45c3-b72b-15524a02d26e"),
-                            IsActive = true,
-                            Name = "Unidade",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6630)
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Abbreviation = "pç",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6639),
-                            ExternalId = new Guid("d0505db2-a3ed-4e3e-943a-61df332631d1"),
-                            IsActive = true,
-                            Name = "Peça",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6640)
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Abbreviation = "cx",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6648),
-                            ExternalId = new Guid("1756d900-d234-4777-bcf0-86a72ea0f1cc"),
-                            IsActive = true,
-                            Name = "Caixa",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6648)
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Abbreviation = "pa",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6656),
-                            ExternalId = new Guid("586762f7-90d5-4821-b1cc-a0679917fe6d"),
-                            IsActive = true,
-                            Name = "Par",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6656)
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Abbreviation = "cm",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6663),
-                            ExternalId = new Guid("c0ef61a9-fdf1-4b8e-89f5-7882e2ffc1fa"),
-                            IsActive = true,
-                            Name = "Centímetro",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6664)
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Abbreviation = "m",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6671),
-                            ExternalId = new Guid("ccdfb575-2492-441f-83fb-5047c1d34a0c"),
-                            IsActive = true,
-                            Name = "Metro",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6671)
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Abbreviation = "g",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6679),
-                            ExternalId = new Guid("30a78d4e-62b6-42d5-95fe-4f5ee0cb0257"),
-                            IsActive = true,
-                            Name = "Grama",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6679)
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Abbreviation = "kg",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6686),
-                            ExternalId = new Guid("9b485104-de70-4964-8b64-dae14a085b97"),
-                            IsActive = true,
-                            Name = "Quilograma",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6687)
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Abbreviation = "ml",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6694),
-                            ExternalId = new Guid("97623f28-4d25-4e8c-a65b-62e219d4922b"),
-                            IsActive = true,
-                            Name = "Mililitro",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6694)
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Abbreviation = "l",
-                            CreatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6702),
-                            ExternalId = new Guid("bb489c91-3400-4520-9033-15b7db5eb18d"),
-                            IsActive = true,
-                            Name = "Litro",
-                            UpdatedAt = new DateTime(2024, 5, 16, 22, 45, 11, 226, DateTimeKind.Utc).AddTicks(6702)
-                        });
                 });
 
             modelBuilder.Entity("quickOS.Core.Entities.User", b =>
