@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using quickOS.Core.Models;
 
 namespace quickOS.Application.DTOs.InputModels;
 
@@ -23,3 +24,12 @@ public class ServiceProvidedInputModel
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public bool IsActive { get; set; }
 }
+
+public class ServiceProvidedQueryParams : QueryParams
+{
+    public int? Code { get; set; }
+    public string? Name { get; set; } = string.Empty;
+    public double? Price { get; set; }
+    public bool? IsActive { get; set; }
+}
+

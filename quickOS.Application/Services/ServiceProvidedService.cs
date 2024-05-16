@@ -120,13 +120,21 @@ public class ServiceProvidedService : IServiceProvidedService
     {
         var predicate = PredicateBuilder.New<ServiceProvided>(true);
 
-        if (queryParams.Code > 0)
+        if (queryParams.Code.HasValue)
         {
             predicate = predicate.And(x => x.Code == queryParams.Code);
         }
         if (!string.IsNullOrEmpty(queryParams.Name))
         {
             predicate = predicate.And(x => x.Name.Contains(queryParams.Name));
+        }
+        if (queryParams.Price.HasValue)
+        {
+            predicate = predicate.And(x => x.Price == queryParams.Price);
+        }
+        if (queryParams.IsActive.HasValue)
+        {
+            predicate = predicate.And(x => x.IsActive == queryParams.IsActive);
         }
 
         return predicate;
@@ -138,6 +146,8 @@ public class ServiceProvidedService : IServiceProvidedService
         {
             nameof(ServiceProvided.Code) => x => x.Code,
             nameof(ServiceProvided.Name) => x => x.Name,
+            nameof(ServiceProvided.Price) => x => x.Price,
+            nameof(ServiceProvided.IsActive) => x => x.IsActive,
             _ => null,
         };
     }
