@@ -144,10 +144,10 @@ public class ServiceProvidedService : IServiceProvidedService
     {
         return queryParams.OrderBy switch
         {
-            nameof(ServiceProvided.Code) => x => x.Code,
-            nameof(ServiceProvided.Name) => x => x.Name,
-            nameof(ServiceProvided.Price) => x => x.Price,
-            nameof(ServiceProvided.IsActive) => x => x.IsActive,
+            "code" => x => x.Code,
+            "name" => x => x.Name,
+            "price" => x => x.Price,
+            "isActive" => x => x.IsActive,
             _ => null,
         };
     }

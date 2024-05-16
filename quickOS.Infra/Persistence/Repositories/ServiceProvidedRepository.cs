@@ -43,10 +43,10 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
         {
             switch (orderDirection)
             {
-                case "ASC":
+                case "asc":
                     query = query.OrderBy(orderBy);
                     break;
-                case "DESC":
+                case "desc":
                     query = query.OrderByDescending(orderBy);
                     break;
             }

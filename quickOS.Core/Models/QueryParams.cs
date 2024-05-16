@@ -12,6 +12,6 @@ public abstract class QueryParams
 
     public string OrderBy { get; set; } = string.Empty;
 
-    [RegularExpression("^(ASC|DESC)$", ErrorMessage = "O campo {0} é inválido")]
+    [RegularExpression("^(asc|desc)$", ErrorMessage = "O campo {0} é inválido")]
     public string OrderDirection { get; set; } = string.Empty;
 }
