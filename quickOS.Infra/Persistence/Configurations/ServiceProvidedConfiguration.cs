@@ -31,7 +31,8 @@ public class ServiceProvidedConfiguration : IEntityTypeConfiguration<ServiceProv
         builder
             .HasOne(s => s.Tenant)
             .WithMany(t => t.ServicesProvided)
-            .HasForeignKey(s => s.TenantId);
+            .HasForeignKey(s => s.TenantId)
+            .IsRequired();
 
         builder
             .HasMany(t => t.ServiceOrderServices)

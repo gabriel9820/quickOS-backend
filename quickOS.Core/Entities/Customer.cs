@@ -11,14 +11,14 @@ public class Customer : MultiTenantEntity
     public string Cellphone { get; private set; }
     public string Email { get; private set; }
     public bool IsActive { get; private set; }
-    public Address Address { get; private set; }
+    public Address? Address { get; private set; }
 
     /* Navigation */
     public ICollection<ServiceOrder>? ServiceOrders { get; private set; }
 
     private Customer() { }
 
-    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, Address address)
+    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, Address? address = default)
     {
         Type = type;
         Document = document;
@@ -54,7 +54,7 @@ public class Customer : MultiTenantEntity
         Email = email;
     }
 
-    public void UpdateAddress(Address address)
+    public void UpdateAddress(Address? address)
     {
         Address = address;
     }
