@@ -8,22 +8,28 @@ public class UnitOfMeasurementConfiguration : IEntityTypeConfiguration<UnitOfMea
 {
     public void Configure(EntityTypeBuilder<UnitOfMeasurement> builder)
     {
-        builder.HasKey(s => s.Id);
+        builder.HasKey(u => u.Id);
 
-        builder.HasIndex(s => s.ExternalId).IsUnique();
-        builder.HasIndex(s => s.Abbreviation).IsUnique();
+        builder.HasIndex(u => u.ExternalId).IsUnique();
+        builder.HasIndex(u => u.Abbreviation).IsUnique();
 
-        builder.Property(s => s.CreatedAt).IsRequired();
-        builder.Property(s => s.UpdatedAt).IsRequired();
+        builder.Property(u => u.CreatedAt).IsRequired();
+        builder.Property(u => u.UpdatedAt).IsRequired();
 
-        builder.Property(s => s.Name)
+        builder.Property(u => u.Name)
             .HasMaxLength(200)
             .IsRequired();
 
-        builder.Property(s => s.Abbreviation)
+        builder.Property(u => u.Abbreviation)
             .HasMaxLength(10)
             .IsRequired();
 
-        builder.Property(s => s.IsActive).IsRequired();
+        builder.Property(u => u.IsActive).IsRequired();
+
+        builder
+            .HasMany(u => u.Products)
+            .WithOne(p => p.UnitOfMeasurement)
+            .HasForeignKey(p => p.UnitOfMeasurementId);
+
     }
 }

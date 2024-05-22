@@ -32,5 +32,10 @@ public class ServiceProvidedConfiguration : IEntityTypeConfiguration<ServiceProv
             .HasOne(s => s.Tenant)
             .WithMany(t => t.ServicesProvided)
             .HasForeignKey(s => s.TenantId);
+
+        builder
+            .HasMany(t => t.ServiceOrderServices)
+            .WithOne(s => s.Service)
+            .HasForeignKey(s => s.ServiceId);
     }
 }
