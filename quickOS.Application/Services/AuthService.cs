@@ -107,7 +107,7 @@ public class AuthService : IAuthService
             registerInputModel.CellPhone,
             registerInputModel.Email,
             BC.HashPassword(registerInputModel.Password),
-            Role.Admin,
+            UserRole.Admin,
             tenant
         );
         await _userRepository.CreateAsync(user);

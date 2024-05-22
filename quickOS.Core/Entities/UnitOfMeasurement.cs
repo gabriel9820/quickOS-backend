@@ -2,9 +2,12 @@ namespace quickOS.Core.Entities;
 
 public class UnitOfMeasurement : BaseEntity
 {
-    public string Name { get; private set; } = string.Empty;
-    public string Abbreviation { get; private set; } = string.Empty;
+    public string Name { get; private set; }
+    public string Abbreviation { get; private set; }
     public bool IsActive { get; private set; }
+
+    /* Navigation */
+    public ICollection<Product>? Products { get; private set; }
 
     private UnitOfMeasurement() { }
 
@@ -13,27 +16,5 @@ public class UnitOfMeasurement : BaseEntity
         Name = name;
         Abbreviation = abbreviation;
         IsActive = true;
-    }
-
-    public UnitOfMeasurement(string name, string abbreviation)
-    {
-        Name = name;
-        Abbreviation = abbreviation;
-        IsActive = true;
-    }
-
-    public void UpdateName(string name)
-    {
-        Name = name;
-    }
-
-    public void UpdateAbbreviation(string abbreviation)
-    {
-        Abbreviation = abbreviation;
-    }
-
-    public void UpdateIsActive(bool isActive)
-    {
-        IsActive = isActive;
     }
 }
