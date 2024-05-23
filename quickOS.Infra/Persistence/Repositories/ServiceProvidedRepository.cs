@@ -62,7 +62,7 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
 
     public async Task<int> GetNextCode()
     {
-        var lastCode = await _dbContext.ServicesProvided.MaxAsync(e => (int?)e.Code) ?? 0;
+        var lastCode = await _dbContext.ServicesProvided.AsNoTracking().MaxAsync(e => (int?)e.Code) ?? 0;
         return ++lastCode;
     }
 

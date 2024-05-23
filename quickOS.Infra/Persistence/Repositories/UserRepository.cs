@@ -22,16 +22,23 @@ public class UserRepository : IUserRepository
     {
         return await _dbContext.Users
             .Include(u => u.Tenant)
+            .IgnoreQueryFilters()
             .SingleOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<bool> VerifyCellphoneInUseAsync(string cellphone)
     {
-        return await _dbContext.Users.AsNoTracking().AnyAsync(u => u.CellPhone == cellphone);
+        return await _dbContext.Users
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .AnyAsync(u => u.CellPhone == cellphone);
     }
 
     public async Task<bool> VerifyEmailInUseAsync(string email)
     {
-        return await _dbContext.Users.AsNoTracking().AnyAsync(u => u.Email == email);
+        return await _dbContext.Users
+            .AsNoTracking()
+            .IgnoreQueryFilters()
+            .AnyAsync(u => u.Email == email);
     }
 }
