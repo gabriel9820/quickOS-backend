@@ -25,7 +25,11 @@ public class QuickOSDbContext : DbContext
 
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+        modelBuilder.Entity<Customer>().HasQueryFilter(s => s.TenantId == _requestProvider.TenantId);
+        modelBuilder.Entity<Product>().HasQueryFilter(p => p.TenantId == _requestProvider.TenantId);
+        modelBuilder.Entity<ServiceOrder>().HasQueryFilter(s => s.TenantId == _requestProvider.TenantId);
         modelBuilder.Entity<ServiceProvided>().HasQueryFilter(s => s.TenantId == _requestProvider.TenantId);
+        modelBuilder.Entity<User>().HasQueryFilter(u => u.TenantId == _requestProvider.TenantId);
 
         modelBuilder.Seed();
     }

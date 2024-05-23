@@ -18,7 +18,7 @@ public class Customer : MultiTenantEntity
 
     private Customer() { }
 
-    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, Address? address = default)
+    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, Address? address)
     {
         Type = type;
         Document = document;

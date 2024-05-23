@@ -4,9 +4,9 @@ public class Product : MultiTenantEntity
 {
     public int Code { get; private set; }
     public string Name { get; private set; }
-    public string Description { get; private set; }
-    public decimal CostPrice { get; private set; }
-    public decimal ProfitMargin { get; private set; }
+    public string? Description { get; private set; }
+    public decimal? CostPrice { get; private set; }
+    public decimal? ProfitMargin { get; private set; }
     public decimal SellingPrice { get; private set; }
     public decimal Stock { get; private set; }
     public bool IsActive { get; private set; }
@@ -20,7 +20,7 @@ public class Product : MultiTenantEntity
 
     private Product() { }
 
-    public Product(int code, string name, string description, decimal costPrice, decimal profitMargin, decimal sellingPrice, decimal stock, UnitOfMeasurement unitOfMeasurement)
+    public Product(int code, string name, string description, decimal? costPrice, decimal? profitMargin, decimal sellingPrice, decimal stock, UnitOfMeasurement unitOfMeasurement)
     {
         Code = code;
         Name = name;
@@ -48,18 +48,18 @@ public class Product : MultiTenantEntity
         Description = description;
     }
 
-    public void UpdateCostPrice(decimal costPrice)
+    public void UpdateCostPrice(decimal? costPrice)
     {
         CostPrice = costPrice;
     }
 
-    public void UpdateProfitMargin(decimal profitMargin)
+    public void UpdateProfitMargin(decimal? profitMargin)
     {
         ProfitMargin = profitMargin;
 
-        if (profitMargin > 0)
+        if (profitMargin.HasValue && CostPrice.HasValue)
         {
-            SellingPrice = CostPrice * (1 + profitMargin / 100);
+            SellingPrice = (decimal)(CostPrice * (1 + profitMargin / 100));
         }
     }
 

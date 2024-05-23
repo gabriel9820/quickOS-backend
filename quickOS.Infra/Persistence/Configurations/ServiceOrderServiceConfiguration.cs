@@ -34,6 +34,7 @@ public class ServiceOrderServiceConfiguration : IEntityTypeConfiguration<Service
             .HasOne(s => s.ServiceOrder)
             .WithMany(s => s.Services)
             .HasForeignKey(s => s.ServiceOrderId)
+            .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
     }
 }

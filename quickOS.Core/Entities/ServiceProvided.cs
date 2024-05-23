@@ -4,7 +4,7 @@ public class ServiceProvided : MultiTenantEntity
 {
     public int Code { get; private set; }
     public string Name { get; private set; }
-    public string Description { get; private set; }
+    public string? Description { get; private set; }
     public decimal Price { get; private set; }
     public bool IsActive { get; private set; }
 
@@ -32,7 +32,7 @@ public class ServiceProvided : MultiTenantEntity
         Name = name;
     }
 
-    public void UpdateDescription(string description)
+    public void UpdateDescription(string? description)
     {
         Description = description;
     }

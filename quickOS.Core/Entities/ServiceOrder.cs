@@ -7,9 +7,9 @@ public class ServiceOrder : MultiTenantEntity
     public int Number { get; private set; }
     public DateTime Date { get; private set; }
     public ServiceOrderStatus Status { get; private set; }
-    public string EquipmentDescription { get; private set; }
-    public string ProblemDescription { get; private set; }
-    public string TechnicalReport { get; private set; }
+    public string? EquipmentDescription { get; private set; }
+    public string? ProblemDescription { get; private set; }
+    public string? TechnicalReport { get; private set; }
     public decimal TotalPrice { get; private set; }
 
     /* Foreign Keys */
@@ -19,13 +19,13 @@ public class ServiceOrder : MultiTenantEntity
     /* Navigation */
     public Customer Customer { get; private set; }
     public User Technician { get; private set; }
-    public ICollection<ServiceOrderProduct> Products { get; private set; }
-    public ICollection<ServiceOrderService> Services { get; private set; }
+    public ICollection<ServiceOrderProduct>? Products { get; private set; }
+    public ICollection<ServiceOrderService>? Services { get; private set; }
 
     public void UpdateTotalPrice()
     {
-        decimal productsTotal = Products.Sum(p => p.TotalPrice);
-        decimal servicesTotal = Services.Sum(s => s.TotalPrice);
+        var productsTotal = Products.Sum(p => p.TotalPrice);
+        var servicesTotal = Services.Sum(s => s.TotalPrice);
 
         TotalPrice = productsTotal + servicesTotal;
     }
