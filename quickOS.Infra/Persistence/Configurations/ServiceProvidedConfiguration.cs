@@ -32,6 +32,7 @@ public class ServiceProvidedConfiguration : IEntityTypeConfiguration<ServiceProv
             .HasOne(s => s.Tenant)
             .WithMany(t => t.ServicesProvided)
             .HasForeignKey(s => s.TenantId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder

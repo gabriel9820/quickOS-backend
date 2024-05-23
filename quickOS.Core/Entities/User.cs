@@ -13,7 +13,7 @@ public class User : BaseEntity
     public UserRole Role { get; private set; }
     public Guid? RefreshToken { get; private set; }
     public DateTime? RefreshTokenExpiresIn { get; private set; }
-    public Address? Address { get; private set; }
+    public Address Address { get; private set; }
 
     /* Foreign Keys */
     public int TenantId { get; private set; }
@@ -33,7 +33,7 @@ public class User : BaseEntity
         IsActive = true;
         Role = role;
         Tenant = tenant;
-        Address = address;
+        Address = address ?? new Address();
     }
 
     public void UpdateFullName(string fullName)

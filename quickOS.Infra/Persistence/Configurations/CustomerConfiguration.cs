@@ -79,6 +79,7 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasOne(c => c.Tenant)
             .WithMany(t => t.Customers)
             .HasForeignKey(c => c.TenantId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder

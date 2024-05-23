@@ -28,6 +28,7 @@ public class ServiceOrderProductConfiguration : IEntityTypeConfiguration<Service
             .HasOne(s => s.Product)
             .WithMany(s => s.ServiceOrderProducts)
             .HasForeignKey(s => s.ProductId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder

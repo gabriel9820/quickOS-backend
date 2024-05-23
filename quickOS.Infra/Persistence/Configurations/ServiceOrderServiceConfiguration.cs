@@ -28,6 +28,7 @@ public class ServiceOrderServiceConfiguration : IEntityTypeConfiguration<Service
             .HasOne(s => s.Service)
             .WithMany(s => s.ServiceOrderServices)
             .HasForeignKey(s => s.ServiceId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder

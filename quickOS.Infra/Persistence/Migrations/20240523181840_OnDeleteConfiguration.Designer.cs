@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using quickOS.Infra.Persistence;
@@ -11,9 +12,11 @@ using quickOS.Infra.Persistence;
 namespace quickOS.Infra.Persistence.Migrations
 {
     [DbContext(typeof(QuickOSDbContext))]
-    partial class QuickOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240523181840_OnDeleteConfiguration")]
+    partial class OnDeleteConfiguration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -85,7 +88,7 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.HasIndex("Email", "TenantId")
                         .IsUnique();
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customer");
                 });
 
             modelBuilder.Entity("quickOS.Core.Entities.Product", b =>
@@ -154,7 +157,7 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.HasIndex("Code", "TenantId")
                         .IsUnique();
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("quickOS.Core.Entities.ServiceOrder", b =>
@@ -222,7 +225,7 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.HasIndex("Number", "TenantId")
                         .IsUnique();
 
-                    b.ToTable("ServiceOrders");
+                    b.ToTable("ServiceOrder");
                 });
 
             modelBuilder.Entity("quickOS.Core.Entities.ServiceOrderProduct", b =>
@@ -275,7 +278,7 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.HasIndex("Item", "ServiceOrderId")
                         .IsUnique();
 
-                    b.ToTable("ServiceOrdersProducts");
+                    b.ToTable("ServiceOrderProduct");
                 });
 
             modelBuilder.Entity("quickOS.Core.Entities.ServiceOrderService", b =>
@@ -328,7 +331,7 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.HasIndex("Item", "ServiceOrderId")
                         .IsUnique();
 
-                    b.ToTable("ServiceOrdersServices");
+                    b.ToTable("ServiceOrderService");
                 });
 
             modelBuilder.Entity("quickOS.Core.Entities.ServiceProvided", b =>
@@ -674,7 +677,7 @@ namespace quickOS.Infra.Persistence.Migrations
 
                             b1.HasKey("CustomerId");
 
-                            b1.ToTable("Customers");
+                            b1.ToTable("Customer");
 
                             b1.WithOwner()
                                 .HasForeignKey("CustomerId");

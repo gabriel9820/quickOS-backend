@@ -40,18 +40,21 @@ public class ServiceOrderConfiguration : IEntityTypeConfiguration<ServiceOrder>
             .HasOne(s => s.Tenant)
             .WithMany(t => t.ServiceOrders)
             .HasForeignKey(s => s.TenantId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder
             .HasOne(s => s.Customer)
             .WithMany(c => c.ServiceOrders)
             .HasForeignKey(s => s.CustomerId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder
             .HasOne(s => s.Technician)
             .WithMany(t => t.ServiceOrders)
             .HasForeignKey(s => s.TechnicianId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder

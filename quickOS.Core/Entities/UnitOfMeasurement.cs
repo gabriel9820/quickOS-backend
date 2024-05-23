@@ -11,7 +11,7 @@ public class UnitOfMeasurement : BaseEntity
 
     private UnitOfMeasurement() { }
 
-    public UnitOfMeasurement(int id, string name, string abbreviation) : base(id)
+    public UnitOfMeasurement(int id, Guid externalId, DateTime createdAt, DateTime updatedAt, string name, string abbreviation) : base(id, externalId, createdAt, updatedAt)
     {
         Name = name;
         Abbreviation = abbreviation;

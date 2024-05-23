@@ -77,6 +77,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasOne(u => u.Tenant)
             .WithMany(t => t.Users)
             .HasForeignKey(u => u.TenantId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder

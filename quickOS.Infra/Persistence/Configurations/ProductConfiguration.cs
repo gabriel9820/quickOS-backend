@@ -48,12 +48,14 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .HasOne(p => p.Tenant)
             .WithMany(t => t.Products)
             .HasForeignKey(p => p.TenantId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder
             .HasOne(p => p.UnitOfMeasurement)
             .WithMany(u => u.Products)
             .HasForeignKey(p => p.UnitOfMeasurementId)
+            .OnDelete(DeleteBehavior.NoAction)
             .IsRequired();
 
         builder
