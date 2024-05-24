@@ -6,33 +6,33 @@ using quickOS.Core.Repositories;
 
 namespace quickOS.Infra.Persistence.Repositories;
 
-public class ServiceProvidedRepository : IServiceProvidedRepository
+public class ProductRepository : IProductRepository
 {
     private readonly QuickOSDbContext _dbContext;
 
-    public ServiceProvidedRepository(QuickOSDbContext dbContext)
+    public ProductRepository(QuickOSDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task CreateAsync(ServiceProvided service)
+    public async Task CreateAsync(Product product)
     {
-        await _dbContext.ServicesProvided.AddAsync(service);
+        await _dbContext.Products.AddAsync(product);
     }
 
-    public void Delete(ServiceProvided service)
+    public void Delete(Product product)
     {
-        _dbContext.ServicesProvided.Remove(service);
+        _dbContext.Products.Remove(product);
     }
 
-    public async Task<PagedResult<ServiceProvided>> GetAllAsync(
-        Expression<Func<ServiceProvided, bool>>? where,
-        Expression<Func<ServiceProvided, object>>? orderBy,
+    public async Task<PagedResult<Product>> GetAllAsync(
+        Expression<Func<Product, bool>>? where,
+        Expression<Func<Product, object>>? orderBy,
         string? orderDirection,
         int currentPage,
         int pageSize)
     {
-        var query = _dbContext.ServicesProvided.AsNoTracking().AsQueryable();
+        var query = _dbContext.Products.AsNoTracking().AsQueryable();
 
         if (where != null)
         {
@@ -55,19 +55,19 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
         return await query.ToPagedResultAsync(currentPage, pageSize);
     }
 
-    public async Task<ServiceProvided?> GetByExternalIdAsync(Guid externalId)
+    public async Task<Product?> GetByExternalIdAsync(Guid externalId)
     {
-        return await _dbContext.ServicesProvided.SingleOrDefaultAsync(s => s.ExternalId == externalId);
+        return await _dbContext.Products.SingleOrDefaultAsync(s => s.ExternalId == externalId);
     }
 
     public async Task<int> GetNextCode()
     {
-        var lastCode = await _dbContext.ServicesProvided.AsNoTracking().MaxAsync(e => (int?)e.Code) ?? 0;
+        var lastCode = await _dbContext.Products.AsNoTracking().MaxAsync(e => (int?)e.Code) ?? 0;
         return ++lastCode;
     }
 
-    public void Update(ServiceProvided service)
+    public void Update(Product product)
     {
-        _dbContext.ServicesProvided.Update(service);
+        _dbContext.Products.Update(product);
     }
 }

@@ -9,14 +9,17 @@ public class AutoMapperProfiles : Profile
 {
     public AutoMapperProfiles()
     {
-        CreateMap<TenantInputModel, Tenant>();
-        CreateMap<Tenant, TenantOutputModel>();
-
-        CreateMap<User, UserOutputModel>();
+        CreateMap<ProductInputModel, Product>();
+        CreateMap<Product, ProductOutputModel>();
 
         CreateMap<ServiceProvidedInputModel, ServiceProvided>();
         CreateMap<ServiceProvided, ServiceProvidedOutputModel>();
 
+        CreateMap<TenantInputModel, Tenant>();
+        CreateMap<Tenant, TenantOutputModel>();
+
         CreateMap<UnitOfMeasurement, UnitOfMeasurementOutputModel>();
+
+        CreateMap<User, UserOutputModel>();
     }
 }

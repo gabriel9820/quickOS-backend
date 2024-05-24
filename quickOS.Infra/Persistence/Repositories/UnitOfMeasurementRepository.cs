@@ -21,4 +21,9 @@ public class UnitOfMeasurementRepository : IUnitOfMeasurementRepository
             .OrderBy(x => x.Name)
             .ToListAsync();
     }
+
+    public async Task<UnitOfMeasurement?> GetByExternalIdAsync(Guid externalId)
+    {
+        return await _dbContext.UnitsOfMeasurement.SingleOrDefaultAsync(s => s.ExternalId == externalId);
+    }
 }
