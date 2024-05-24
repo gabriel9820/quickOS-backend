@@ -57,12 +57,14 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product?> GetByExternalIdAsync(Guid externalId)
     {
-        return await _dbContext.Products.SingleOrDefaultAsync(s => s.ExternalId == externalId);
+        return await _dbContext.Products
+            .Include(p => p.UnitOfMeasurement)
+            .SingleOrDefaultAsync(p => p.ExternalId == externalId);
     }
 
     public async Task<int> GetNextCode()
     {
-        var lastCode = await _dbContext.Products.AsNoTracking().MaxAsync(e => (int?)e.Code) ?? 0;
+        var lastCode = await _dbContext.Products.AsNoTracking().MaxAsync(p => (int?)p.Code) ?? 0;
         return ++lastCode;
     }
 

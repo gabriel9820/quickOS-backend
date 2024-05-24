@@ -30,6 +30,9 @@ public class ProductService : IProductService
     {
         var product = _mapper.Map<Product>(productInputModel);
 
+        var unitOfMeasurement = await _unitOfMeasurementRepository.GetByExternalIdAsync(productInputModel.UnitOfMeasurementExternalId);
+        product.UpdateUnitOfMeasurement(unitOfMeasurement);
+
         await _productRepository.CreateAsync(product);
         await _unitOfWork.SaveChangesAsync();
 
