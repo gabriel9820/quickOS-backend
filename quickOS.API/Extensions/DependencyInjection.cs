@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using quickOS.API.Providers;
-using quickOS.Application.AutoMapper;
+using quickOS.Application.Mappings;
 using quickOS.Application.Interfaces;
 using quickOS.Application.Services;
 using quickOS.Core.Repositories;
@@ -33,7 +33,7 @@ public static class DependencyInjection
 
                     ValidIssuer = configuration["Jwt:Issuer"],
                     ValidAudience = configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]!))
                 };
 
                 options.Events = new JwtBearerEvents
