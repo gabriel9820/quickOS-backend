@@ -24,10 +24,12 @@ public static class ProductMapping
 
     public static ProductOutputModel ToOutputModel(this Product product)
     {
-        var unitOfMeasurementOutputModel = new UnitOfMeasurementOutputModel(
-            product.UnitOfMeasurement.ExternalId,
-            product.UnitOfMeasurement.Name,
-            product.UnitOfMeasurement.Abbreviation);
+        var unitOfMeasurementOutputModel = product.UnitOfMeasurement != null
+            ? new UnitOfMeasurementOutputModel(
+                product.UnitOfMeasurement.ExternalId,
+                product.UnitOfMeasurement.Name,
+                product.UnitOfMeasurement.Abbreviation)
+            : null;
 
         return new ProductOutputModel(
             product.ExternalId,
@@ -39,8 +41,7 @@ public static class ProductMapping
             product.SellingPrice,
             product.Stock,
             product.IsActive,
-            unitOfMeasurementOutputModel
-            );
+            unitOfMeasurementOutputModel);
     }
 
     public static IEnumerable<ProductOutputModel> ToOutputModel(this IEnumerable<Product> products)

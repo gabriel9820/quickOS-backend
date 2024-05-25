@@ -24,8 +24,8 @@ public class ServiceOrder : MultiTenantEntity
 
     public void UpdateTotalPrice()
     {
-        var productsTotal = Products.Sum(p => p.TotalPrice);
-        var servicesTotal = Services.Sum(s => s.TotalPrice);
+        var productsTotal = Products != null ? Products.Sum(p => p.TotalPrice) : 0;
+        var servicesTotal = Services != null ? Services.Sum(s => s.TotalPrice) : 0;
 
         TotalPrice = productsTotal + servicesTotal;
     }

@@ -11,9 +11,9 @@ public class ProductOutputModel
     public decimal SellingPrice { get; private set; }
     public decimal Stock { get; private set; }
     public bool IsActive { get; private set; }
-    public UnitOfMeasurementOutputModel UnitOfMeasurement { get; private set; }
+    public UnitOfMeasurementOutputModel? UnitOfMeasurement { get; private set; }
 
-    public ProductOutputModel(Guid externalId, int code, string name, string? description, decimal? costPrice, decimal? profitMargin, decimal sellingPrice, decimal stock, bool isActive, UnitOfMeasurementOutputModel unitOfMeasurement)
+    public ProductOutputModel(Guid externalId, int code, string name, string? description, decimal? costPrice, decimal? profitMargin, decimal sellingPrice, decimal stock, bool isActive, UnitOfMeasurementOutputModel? unitOfMeasurement)
     {
         ExternalId = externalId;
         Code = code;
