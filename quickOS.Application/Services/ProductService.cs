@@ -1,10 +1,10 @@
 ﻿using System.Linq.Expressions;
 using System.Net;
-using AutoMapper;
 using LinqKit;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.DTOs.OutputModels;
 using quickOS.Application.Interfaces;
+using quickOS.Application.Mappings;
 using quickOS.Core.Entities;
 using quickOS.Core.Models;
 using quickOS.Core.Repositories;
@@ -16,27 +16,22 @@ public class ProductService : IProductService
     private readonly IProductRepository _productRepository;
     private readonly IUnitOfMeasurementRepository _unitOfMeasurementRepository;
     private readonly IUnitOfWork _unitOfWork;
-    private readonly IMapper _mapper;
 
-    public ProductService(IProductRepository productRepository, IUnitOfMeasurementRepository unitOfMeasurementRepository, IUnitOfWork unitOfWork, IMapper mapper)
+    public ProductService(IProductRepository productRepository, IUnitOfMeasurementRepository unitOfMeasurementRepository, IUnitOfWork unitOfWork)
     {
         _productRepository = productRepository;
         _unitOfMeasurementRepository = unitOfMeasurementRepository;
         _unitOfWork = unitOfWork;
-        _mapper = mapper;
     }
 
     public async Task<ApiResponse<ProductOutputModel>> CreateAsync(ProductInputModel productInputModel)
     {
-        var product = _mapper.Map<Product>(productInputModel);
-
-        var unitOfMeasurement = await _unitOfMeasurementRepository.GetByExternalIdAsync(productInputModel.UnitOfMeasurementExternalId);
-        product.UpdateUnitOfMeasurement(unitOfMeasurement);
+        var product = await productInputModel.ToEntity(_unitOfMeasurementRepository);
 
         await _productRepository.CreateAsync(product);
         await _unitOfWork.SaveChangesAsync();
 
-        var createdProduct = _mapper.Map<ProductOutputModel>(product);
+        var createdProduct = product.ToOutputModel();
 
         return ApiResponse<ProductOutputModel>.Ok(createdProduct);
     }
@@ -67,14 +62,13 @@ public class ProductService : IProductService
             queryParams.OrderDirection,
             queryParams.CurrentPage,
             queryParams.PageSize);
-        var productsDTO = _mapper.Map<IEnumerable<ProductOutputModel>>(products.Data);
 
         var result = new PagedResult<ProductOutputModel>(
             products.CurrentPage,
             products.TotalPages,
             products.PageSize,
             products.TotalCount,
-            productsDTO);
+            products.Data.ToOutputModel());
 
         return ApiResponse<PagedResult<ProductOutputModel>>.Ok(result);
     }
@@ -88,7 +82,7 @@ public class ProductService : IProductService
             return ApiResponse<ProductOutputModel>.Error(HttpStatusCode.NotFound, "Produto não encontrado");
         }
 
-        var result = _mapper.Map<ProductOutputModel>(product);
+        var result = product.ToOutputModel();
 
         return ApiResponse<ProductOutputModel>.Ok(result);
     }
@@ -122,7 +116,7 @@ public class ProductService : IProductService
         product.UpdateUnitOfMeasurement(unitOfMeasurement);
         await _unitOfWork.SaveChangesAsync();
 
-        var result = _mapper.Map<ProductOutputModel>(product);
+        var result = product.ToOutputModel();
 
         return ApiResponse<ProductOutputModel>.Ok(result);
     }
