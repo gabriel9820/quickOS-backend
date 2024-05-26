@@ -37,9 +37,52 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.Property(u => u.Role).IsRequired();
 
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.ZipCode)
+            .HasMaxLength(9)
+            .IsFixedLength()
+            .IsRequired(false);
+
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.Street)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.Number)
+            .HasMaxLength(30)
+            .IsRequired(false);
+
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.Details)
+            .HasMaxLength(100)
+            .IsRequired(false);
+
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.Neighborhood)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.City)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
+        builder.OwnsOne(u => u.Address)
+            .Property(a => a.State)
+            .HasMaxLength(200)
+            .IsRequired(false);
+
         builder
             .HasOne(u => u.Tenant)
             .WithMany(t => t.Users)
-            .HasForeignKey(u => u.TenantId);
+            .HasForeignKey(u => u.TenantId)
+            .OnDelete(DeleteBehavior.NoAction)
+            .IsRequired();
+
+        builder
+            .HasMany(u => u.ServiceOrders)
+            .WithOne(s => s.Technician)
+            .HasForeignKey(s => s.TechnicianId);
     }
 }

@@ -1,4 +1,5 @@
 using quickOS.API.Extensions;
+using quickOS.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
@@ -31,7 +34,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseCors(options => options
-    .WithOrigins([builder.Configuration["Jwt:Audience"]])
+    .WithOrigins([builder.Configuration["Jwt:Audience"]!])
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials()

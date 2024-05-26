@@ -6,8 +6,11 @@ public class Tenant : BaseEntity
     public bool IsActive { get; private set; }
 
     /* Navigation */
-    public ICollection<User> Users { get; private set; }
-    public ICollection<ServiceProvided> ServicesProvided { get; private set; }
+    public ICollection<User>? Users { get; private set; }
+    public ICollection<ServiceProvided>? ServicesProvided { get; private set; }
+    public ICollection<Product>? Products { get; private set; }
+    public ICollection<Customer>? Customers { get; private set; }
+    public ICollection<ServiceOrder>? ServiceOrders { get; private set; }
 
     private Tenant() { }
 
@@ -15,5 +18,10 @@ public class Tenant : BaseEntity
     {
         Name = name;
         IsActive = true;
+    }
+
+    public void UpdateName(string name)
+    {
+        Name = name;
     }
 }

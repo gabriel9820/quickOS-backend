@@ -26,7 +26,7 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
     }
 
     public async Task<PagedResult<ServiceProvided>> GetAllAsync(
-        Expression<Func<ServiceProvided, bool>>? filters,
+        Expression<Func<ServiceProvided, bool>>? where,
         Expression<Func<ServiceProvided, object>>? orderBy,
         string? orderDirection,
         int currentPage,
@@ -34,19 +34,19 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
     {
         var query = _dbContext.ServicesProvided.AsNoTracking().AsQueryable();
 
-        if (filters != null)
+        if (where != null)
         {
-            query = query.Where(filters);
+            query = query.Where(where);
         }
 
         if (orderBy != null && orderDirection != null)
         {
             switch (orderDirection)
             {
-                case "ASC":
+                case "asc":
                     query = query.OrderBy(orderBy);
                     break;
-                case "DESC":
+                case "desc":
                     query = query.OrderByDescending(orderBy);
                     break;
             }
@@ -58,6 +58,12 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
     public async Task<ServiceProvided?> GetByExternalIdAsync(Guid externalId)
     {
         return await _dbContext.ServicesProvided.SingleOrDefaultAsync(s => s.ExternalId == externalId);
+    }
+
+    public async Task<int> GetNextCode()
+    {
+        var lastCode = await _dbContext.ServicesProvided.AsNoTracking().MaxAsync(e => (int?)e.Code) ?? 0;
+        return ++lastCode;
     }
 
     public void Update(ServiceProvided service)

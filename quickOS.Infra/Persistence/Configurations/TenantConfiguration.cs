@@ -25,5 +25,25 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
             .HasMany(t => t.Users)
             .WithOne(u => u.Tenant)
             .HasForeignKey(u => u.TenantId);
+
+        builder
+            .HasMany(t => t.ServicesProvided)
+            .WithOne(s => s.Tenant)
+            .HasForeignKey(s => s.TenantId);
+
+        builder
+            .HasMany(t => t.Products)
+            .WithOne(p => p.Tenant)
+            .HasForeignKey(p => p.TenantId);
+
+        builder
+            .HasMany(t => t.Customers)
+            .WithOne(c => c.Tenant)
+            .HasForeignKey(c => c.TenantId);
+
+        builder
+            .HasMany(t => t.ServiceOrders)
+            .WithOne(s => s.Tenant)
+            .HasForeignKey(s => s.TenantId);
     }
 }

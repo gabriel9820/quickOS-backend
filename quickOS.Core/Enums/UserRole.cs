@@ -1,6 +1,6 @@
 ﻿namespace quickOS.Core.Enums;
 
-public enum Role
+public enum UserRole
 {
     Admin = 1,
     Technician = 2,

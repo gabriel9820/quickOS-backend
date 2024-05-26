@@ -88,6 +88,13 @@ public class ServiceProvidedService : IServiceProvidedService
         return ApiResponse<ServiceProvidedOutputModel>.Ok(result);
     }
 
+    public async Task<ApiResponse<int>> GetNextCode()
+    {
+        var nextCode = await _serviceProvidedRepository.GetNextCode();
+
+        return ApiResponse<int>.Ok(nextCode);
+    }
+
     public async Task<ApiResponse<ServiceProvidedOutputModel>> UpdateAsync(Guid externalId, ServiceProvidedInputModel serviceInputModel)
     {
         var service = await _serviceProvidedRepository.GetByExternalIdAsync(externalId);
@@ -113,13 +120,21 @@ public class ServiceProvidedService : IServiceProvidedService
     {
         var predicate = PredicateBuilder.New<ServiceProvided>(true);
 
-        if (queryParams.Code > 0)
+        if (queryParams.Code.HasValue)
         {
             predicate = predicate.And(x => x.Code == queryParams.Code);
         }
         if (!string.IsNullOrEmpty(queryParams.Name))
         {
             predicate = predicate.And(x => x.Name.Contains(queryParams.Name));
+        }
+        if (queryParams.Price.HasValue)
+        {
+            predicate = predicate.And(x => x.Price == queryParams.Price);
+        }
+        if (queryParams.IsActive.HasValue)
+        {
+            predicate = predicate.And(x => x.IsActive == queryParams.IsActive);
         }
 
         return predicate;
@@ -129,8 +144,10 @@ public class ServiceProvidedService : IServiceProvidedService
     {
         return queryParams.OrderBy switch
         {
-            nameof(ServiceProvided.Code) => x => x.Code,
-            nameof(ServiceProvided.Name) => x => x.Name,
+            "code" => x => x.Code,
+            "name" => x => x.Name,
+            "price" => x => x.Price,
+            "isActive" => x => x.IsActive,
             _ => null,
         };
     }
