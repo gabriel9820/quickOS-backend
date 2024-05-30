@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using quickOS.Application.Interfaces;
 using quickOS.Core.Entities;
 using quickOS.Core.Models;
 using quickOS.Core.Repositories;
@@ -9,10 +10,12 @@ namespace quickOS.Infra.Persistence.Repositories;
 public class UserRepository : IUserRepository
 {
     private readonly QuickOSDbContext _dbContext;
+    private readonly IRequestProvider _requestProvider;
 
-    public UserRepository(QuickOSDbContext dbContext)
+    public UserRepository(QuickOSDbContext dbContext, IRequestProvider requestProvider)
     {
         _dbContext = dbContext;
+        _requestProvider = requestProvider;
     }
 
     public async Task CreateAsync(User user)
@@ -32,7 +35,10 @@ public class UserRepository : IUserRepository
         int currentPage,
         int pageSize)
     {
-        var query = _dbContext.Users.AsNoTracking().AsQueryable();
+        var query = _dbContext.Users
+            .AsNoTracking()
+            .AsQueryable()
+            .Where(u => u.Id != _requestProvider.UserId);
 
         if (where != null)
         {
