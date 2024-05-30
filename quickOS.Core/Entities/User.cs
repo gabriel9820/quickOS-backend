@@ -13,7 +13,6 @@ public class User : BaseEntity
     public UserRole Role { get; private set; }
     public Guid? RefreshToken { get; private set; }
     public DateTime? RefreshTokenExpiresIn { get; private set; }
-    public Address Address { get; private set; }
 
     /* Foreign Keys */
     public int TenantId { get; private set; }
@@ -24,7 +23,7 @@ public class User : BaseEntity
 
     private User() { }
 
-    public User(string fullName, string cellphone, string email, string password, UserRole role, Tenant tenant, bool isActive, Address? address = default)
+    public User(string fullName, string cellphone, string email, string password, UserRole role, Tenant tenant, bool isActive)
     {
         FullName = fullName;
         Cellphone = cellphone;
@@ -33,7 +32,6 @@ public class User : BaseEntity
         IsActive = isActive;
         Role = role;
         Tenant = tenant;
-        Address = address ?? new Address();
     }
 
     public void UpdateFullName(string fullName)
@@ -60,11 +58,6 @@ public class User : BaseEntity
     {
         RefreshToken = newRefreshToken;
         RefreshTokenExpiresIn = DateTime.UtcNow.AddDays(7);
-    }
-
-    public void UpdateAddress(Address? address)
-    {
-        Address = address;
     }
 
     public void UpdateIsActive(bool isActive)

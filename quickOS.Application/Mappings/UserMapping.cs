@@ -20,8 +20,7 @@ public static class UserMapping
             BC.HashPassword(inputModel.Password),
             inputModel.Role,
             tenant,
-            inputModel.IsActive,
-            null);
+            inputModel.IsActive);
     }
 
     public static UserOutputModel ToOutputModel(this User user)
