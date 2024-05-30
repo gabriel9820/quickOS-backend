@@ -99,7 +99,7 @@ public class AuthService : IAuthService
             return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O celular informado já está em uso");
         }
 
-        var tenant = new Tenant(registerInputModel.TenantName);
+        var tenant = new Tenant(registerInputModel.TenantName, true);
         await _tenantRepository.CreateAsync(tenant);
 
         var user = new User(
@@ -108,8 +108,8 @@ public class AuthService : IAuthService
             registerInputModel.Email,
             BC.HashPassword(registerInputModel.Password),
             UserRole.Admin,
-            tenant
-        );
+            tenant,
+            true);
         await _userRepository.CreateAsync(user);
 
         await _unitOfWork.SaveChangesAsync();

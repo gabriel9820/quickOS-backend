@@ -11,10 +11,10 @@ public class UnitOfMeasurement : BaseEntity
 
     private UnitOfMeasurement() { }
 
-    public UnitOfMeasurement(int id, Guid externalId, DateTime createdAt, DateTime updatedAt, string name, string abbreviation) : base(id, externalId, createdAt, updatedAt)
+    public UnitOfMeasurement(int id, Guid externalId, DateTime createdAt, DateTime updatedAt, string name, string abbreviation, bool isActive) : base(id, externalId, createdAt, updatedAt)
     {
         Name = name;
         Abbreviation = abbreviation;
-        IsActive = true;
+        IsActive = isActive;
     }
 }

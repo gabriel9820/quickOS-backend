@@ -18,7 +18,7 @@ public class Customer : MultiTenantEntity
 
     private Customer() { }
 
-    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, Address address)
+    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, bool isActive, Address address)
     {
         Type = type;
         Document = document;
@@ -26,7 +26,7 @@ public class Customer : MultiTenantEntity
         Cellphone = cellphone;
         Email = email;
         Address = address;
-        IsActive = true;
+        IsActive = isActive;
     }
 
     public void UpdateType(CustomerType type)

@@ -19,6 +19,7 @@ public static class ProductMapping
             inputModel.ProfitMargin,
             inputModel.SellingPrice,
             inputModel.Stock,
+            inputModel.IsActive,
             unitOfMeasurement);
     }
 

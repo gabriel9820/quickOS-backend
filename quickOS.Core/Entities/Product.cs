@@ -20,7 +20,7 @@ public class Product : MultiTenantEntity
 
     private Product() { }
 
-    public Product(int code, string name, string description, decimal? costPrice, decimal? profitMargin, decimal sellingPrice, decimal stock, UnitOfMeasurement unitOfMeasurement)
+    public Product(int code, string name, string description, decimal? costPrice, decimal? profitMargin, decimal sellingPrice, decimal stock, bool isActive, UnitOfMeasurement unitOfMeasurement)
     {
         Code = code;
         Name = name;
@@ -30,7 +30,7 @@ public class Product : MultiTenantEntity
         SellingPrice = sellingPrice;
         Stock = stock;
         UnitOfMeasurement = unitOfMeasurement;
-        IsActive = true;
+        IsActive = isActive;
     }
 
     public void UpdateCode(int code)

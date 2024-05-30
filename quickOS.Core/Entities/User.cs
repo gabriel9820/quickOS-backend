@@ -24,13 +24,13 @@ public class User : BaseEntity
 
     private User() { }
 
-    public User(string fullName, string cellphone, string email, string password, UserRole role, Tenant tenant, Address? address = default)
+    public User(string fullName, string cellphone, string email, string password, UserRole role, Tenant tenant, bool isActive, Address? address = default)
     {
         FullName = fullName;
         Cellphone = cellphone;
         Email = email;
         Password = password;
-        IsActive = true;
+        IsActive = isActive;
         Role = role;
         Tenant = tenant;
         Address = address ?? new Address();

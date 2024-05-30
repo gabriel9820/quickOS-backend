@@ -20,6 +20,7 @@ public static class UserMapping
             BC.HashPassword(inputModel.Password),
             inputModel.Role,
             tenant,
+            inputModel.IsActive,
             null);
     }
 
