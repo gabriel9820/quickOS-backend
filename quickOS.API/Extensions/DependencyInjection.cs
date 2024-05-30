@@ -95,6 +95,7 @@ public static class DependencyInjection
         services.AddScoped<IServiceProvidedService, ServiceProvidedService>();
         services.AddScoped<IUnitOfMeasurementService, UnitOfMeasurementService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }
