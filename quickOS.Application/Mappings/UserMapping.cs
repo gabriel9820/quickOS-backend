@@ -29,6 +29,7 @@ public static class UserMapping
         return new UserOutputModel(
             user.ExternalId,
             user.FullName,
+            user.Cellphone,
             user.Email,
             user.Role,
             user.IsActive);
