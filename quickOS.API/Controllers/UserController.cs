@@ -47,7 +47,7 @@ public class UserController : ControllerBase
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> Create([FromBody] UserInputModel userInputModel)
+    public async Task<IActionResult> Create([FromBody] UserCreateInputModel userInputModel)
     {
         var result = await _userService.CreateAsync(userInputModel);
 

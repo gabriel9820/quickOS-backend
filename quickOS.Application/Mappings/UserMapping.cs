@@ -9,7 +9,7 @@ namespace quickOS.Application.Mappings;
 
 public static class UserMapping
 {
-    public static async Task<User> ToEntity(this UserInputModel inputModel, IRequestProvider requestProvider, ITenantRepository tenantRepository)
+    public static async Task<User> ToEntity(this UserCreateInputModel inputModel, IRequestProvider requestProvider, ITenantRepository tenantRepository)
     {
         var tenant = await tenantRepository.GetByIdAsync(requestProvider.TenantId);
 

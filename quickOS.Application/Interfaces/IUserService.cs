@@ -6,7 +6,7 @@ namespace quickOS.Application.Interfaces;
 
 public interface IUserService
 {
-    Task<ApiResponse<UserOutputModel>> CreateAsync(UserInputModel userInputModel);
+    Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel);
     Task<ApiResponse> DeleteAsync(Guid externalId);
     Task<ApiResponse<PagedResult<UserOutputModel>>> GetAllAsync(UserQueryParams queryParams);
     Task<ApiResponse<UserOutputModel>> GetByExternalIdAsync(Guid externalId);

@@ -26,7 +26,7 @@ public class UserService : IUserService
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ApiResponse<UserOutputModel>> CreateAsync(UserInputModel userInputModel)
+    public async Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel)
     {
         var user = await userInputModel.ToEntity(_requestProvider, _tenantRepository);
 
@@ -103,11 +103,15 @@ public class UserService : IUserService
             return ApiResponse<UserOutputModel>.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
         }
 
+        if (user.Id == _requestProvider.UserId)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "Não é possível alterar seu próprio usuário");
+        }
+
         user.UpdateFullName(userInputModel.FullName);
         user.UpdateCellphone(userInputModel.Cellphone);
         user.UpdateRole(userInputModel.Role);
         user.UpdateIsActive(userInputModel.IsActive);
-        // user.UpdateAddress(userInputModel.Address);
 
         await _unitOfWork.SaveChangesAsync();
 

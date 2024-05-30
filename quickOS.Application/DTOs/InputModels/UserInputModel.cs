@@ -23,14 +23,17 @@ public class UserInputModel
     public string Email { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    [MinLength(8, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
-    public string Password { get; set; } = string.Empty;
-
-    [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public UserRole Role { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public bool IsActive { get; set; }
+}
+
+public class UserCreateInputModel : UserInputModel
+{
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [MinLength(8, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
+    public string Password { get; set; } = string.Empty;
 }
 
 public class UserQueryParams : QueryParams
