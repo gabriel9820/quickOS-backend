@@ -85,7 +85,7 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users
             .AsNoTracking()
             .IgnoreQueryFilters()
-            .AnyAsync(u => u.CellPhone == cellphone);
+            .AnyAsync(u => u.Cellphone == cellphone);
     }
 
     public async Task<bool> VerifyEmailInUseAsync(string email)

@@ -12,7 +12,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(u => u.ExternalId).IsUnique();
         builder.HasIndex(u => u.Email).IsUnique();
-        builder.HasIndex(u => u.CellPhone).IsUnique();
+        builder.HasIndex(u => u.Cellphone).IsUnique();
         builder.HasIndex(u => u.RefreshToken).IsUnique();
 
         builder.Property(u => u.CreatedAt).IsRequired();
@@ -22,7 +22,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(200)
             .IsRequired();
 
-        builder.Property(u => u.CellPhone)
+        builder.Property(u => u.Cellphone)
             .HasMaxLength(15)
             .IsFixedLength()
             .IsRequired();

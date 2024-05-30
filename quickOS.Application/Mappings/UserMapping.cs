@@ -15,7 +15,7 @@ public static class UserMapping
 
         return new User(
             inputModel.FullName,
-            inputModel.CellPhone,
+            inputModel.Cellphone,
             inputModel.Email,
             BC.HashPassword(inputModel.Password),
             inputModel.Role,

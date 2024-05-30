@@ -92,7 +92,7 @@ public class AuthService : IAuthService
             return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O email informado já está em uso");
         }
 
-        var isCellphoneInUse = await _userRepository.VerifyCellphoneInUseAsync(registerInputModel.CellPhone);
+        var isCellphoneInUse = await _userRepository.VerifyCellphoneInUseAsync(registerInputModel.Cellphone);
 
         if (isCellphoneInUse)
         {
@@ -104,7 +104,7 @@ public class AuthService : IAuthService
 
         var user = new User(
             registerInputModel.OwnerName,
-            registerInputModel.CellPhone,
+            registerInputModel.Cellphone,
             registerInputModel.Email,
             BC.HashPassword(registerInputModel.Password),
             UserRole.Admin,

@@ -6,7 +6,7 @@ namespace quickOS.Core.Entities;
 public class User : BaseEntity
 {
     public string FullName { get; private set; }
-    public string CellPhone { get; private set; }
+    public string Cellphone { get; private set; }
     public string Email { get; private set; }
     public string Password { get; private set; }
     public bool IsActive { get; private set; }
@@ -24,10 +24,10 @@ public class User : BaseEntity
 
     private User() { }
 
-    public User(string fullName, string cellPhone, string email, string password, UserRole role, Tenant tenant, Address? address = default)
+    public User(string fullName, string cellphone, string email, string password, UserRole role, Tenant tenant, Address? address = default)
     {
         FullName = fullName;
-        CellPhone = cellPhone;
+        Cellphone = cellphone;
         Email = email;
         Password = password;
         IsActive = true;
@@ -43,7 +43,7 @@ public class User : BaseEntity
 
     public void UpdateCellphone(string cellphone)
     {
-        CellPhone = cellphone;
+        Cellphone = cellphone;
     }
 
     public void UpdatePassword(string password)

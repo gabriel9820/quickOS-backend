@@ -47,6 +47,11 @@ public class UserService : IUserService
             return ApiResponse.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
         }
 
+        if (user.Id == _requestProvider.UserId)
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "Não é possível excluir seu próprio usuário");
+        }
+
         _userRepository.Delete(user);
         await _unitOfWork.SaveChangesAsync();
 
@@ -99,7 +104,7 @@ public class UserService : IUserService
         }
 
         user.UpdateFullName(userInputModel.FullName);
-        user.UpdateCellphone(userInputModel.CellPhone);
+        user.UpdateCellphone(userInputModel.Cellphone);
         user.UpdateRole(userInputModel.Role);
         user.UpdateIsActive(userInputModel.IsActive);
         // user.UpdateAddress(userInputModel.Address);
@@ -119,9 +124,9 @@ public class UserService : IUserService
         {
             predicate = predicate.And(x => x.FullName.Contains(queryParams.FullName));
         }
-        if (!string.IsNullOrEmpty(queryParams.CellPhone))
+        if (!string.IsNullOrEmpty(queryParams.Cellphone))
         {
-            predicate = predicate.And(x => x.CellPhone == queryParams.CellPhone);
+            predicate = predicate.And(x => x.Cellphone == queryParams.Cellphone);
         }
         if (!string.IsNullOrEmpty(queryParams.Email))
         {

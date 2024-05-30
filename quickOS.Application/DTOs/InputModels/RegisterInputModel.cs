@@ -17,7 +17,7 @@ public class RegisterInputModel
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [StringLength(15, ErrorMessage = "O campo {0} deve conter {1} caracteres")]
     [RegularExpression(@"^\(\d{2}\)\ 9\d{4}-\d{4}$", ErrorMessage = "O campo {0} é inválido")]
-    public string CellPhone { get; set; } = string.Empty;
+    public string Cellphone { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [MinLength(1, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
