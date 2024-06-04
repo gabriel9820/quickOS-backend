@@ -41,6 +41,6 @@ public class UserQueryParams : QueryParams
     public string? FullName { get; set; } = string.Empty;
     public string? Cellphone { get; set; } = string.Empty;
     public string? Email { get; set; } = string.Empty;
-    public UserRole? Role { get; private set; }
+    public UserRole[]? Roles { get; set; }
     public bool? IsActive { get; set; }
 }

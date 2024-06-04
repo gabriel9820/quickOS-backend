@@ -136,9 +136,9 @@ public class UserService : IUserService
         {
             predicate = predicate.And(x => x.Email.Contains(queryParams.Email));
         }
-        if (queryParams.Role.HasValue)
+        if (queryParams.Roles?.Length > 0)
         {
-            predicate = predicate.And(x => x.Role == queryParams.Role);
+            predicate = predicate.And(x => queryParams.Roles.Contains(x.Role));
         }
         if (queryParams.IsActive.HasValue)
         {
