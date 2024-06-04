@@ -128,10 +128,6 @@ public class UserService : IUserService
         {
             predicate = predicate.And(x => x.FullName.Contains(queryParams.FullName));
         }
-        if (!string.IsNullOrEmpty(queryParams.Cellphone))
-        {
-            predicate = predicate.And(x => x.Cellphone.Contains(queryParams.Cellphone));
-        }
         if (!string.IsNullOrEmpty(queryParams.Email))
         {
             predicate = predicate.And(x => x.Email.Contains(queryParams.Email));
