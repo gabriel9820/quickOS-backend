@@ -66,7 +66,7 @@ public class UserRepository : IUserRepository
         return await _dbContext.Users
             .Include(u => u.Tenant)
             .IgnoreQueryFilters()
-            .SingleOrDefaultAsync(u => u.Email == email);
+            .SingleOrDefaultAsync(u => u.Email == email && u.IsActive);
     }
 
     public async Task<User?> GetByExternalIdAsync(Guid externalId)
@@ -86,19 +86,33 @@ public class UserRepository : IUserRepository
         _dbContext.Users.Update(user);
     }
 
-    public async Task<bool> VerifyCellphoneInUseAsync(string cellphone)
+    public async Task<bool> VerifyCellphoneInUseAsync(string cellphone, int? userId)
     {
-        return await _dbContext.Users
+        var query = _dbContext.Users
             .AsNoTracking()
             .IgnoreQueryFilters()
-            .AnyAsync(u => u.Cellphone == cellphone);
+            .Where(u => u.Cellphone == cellphone);
+
+        if (userId.HasValue)
+        {
+            query = query.Where(u => u.Id != userId);
+        }
+
+        return await query.AnyAsync();
     }
 
-    public async Task<bool> VerifyEmailInUseAsync(string email)
+    public async Task<bool> VerifyEmailInUseAsync(string email, int? userId)
     {
-        return await _dbContext.Users
+        var query = _dbContext.Users
             .AsNoTracking()
             .IgnoreQueryFilters()
-            .AnyAsync(u => u.Email == email);
+            .Where(u => u.Email == email);
+
+        if (userId.HasValue)
+        {
+            query = query.Where(u => u.Id != userId);
+        }
+
+        return await query.AnyAsync();
     }
 }

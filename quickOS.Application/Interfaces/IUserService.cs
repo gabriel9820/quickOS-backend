@@ -11,4 +11,5 @@ public interface IUserService
     Task<ApiResponse<PagedResult<UserOutputModel>>> GetAllAsync(UserQueryParams queryParams);
     Task<ApiResponse<UserOutputModel>> GetByExternalIdAsync(Guid externalId);
     Task<ApiResponse<UserOutputModel>> UpdateAsync(Guid externalId, UserInputModel userInputModel);
+    Task<ApiResponse<UserOutputModel>> ValidateCellphoneAndEmail(string cellphone, string email, int? userId);
 }

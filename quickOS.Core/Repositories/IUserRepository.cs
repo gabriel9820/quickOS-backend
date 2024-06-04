@@ -18,6 +18,6 @@ public interface IUserRepository
     Task<User?> GetByExternalIdAsync(Guid externalId);
     Task<User?> GetByIdAsync(int id);
     void Update(User user);
-    Task<bool> VerifyCellphoneInUseAsync(string cellphone);
-    Task<bool> VerifyEmailInUseAsync(string email);
+    Task<bool> VerifyCellphoneInUseAsync(string cellphone, int? userId);
+    Task<bool> VerifyEmailInUseAsync(string email, int? userId);
 }

@@ -28,6 +28,13 @@ public class UserService : IUserService
 
     public async Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel)
     {
+        var isValid = await ValidateCellphoneAndEmail(userInputModel.Cellphone, userInputModel.Email, null);
+
+        if (!isValid.Success)
+        {
+            return isValid;
+        }
+
         var user = await userInputModel.ToEntity(_requestProvider, _tenantRepository);
 
         await _userRepository.CreateAsync(user);
@@ -108,6 +115,13 @@ public class UserService : IUserService
             return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "Não é possível alterar seu próprio usuário");
         }
 
+        var isValid = await ValidateCellphoneAndEmail(userInputModel.Cellphone, userInputModel.Email, user.Id);
+
+        if (!isValid.Success)
+        {
+            return isValid;
+        }
+
         user.UpdateFullName(userInputModel.FullName);
         user.UpdateCellphone(userInputModel.Cellphone);
         user.UpdateRole(userInputModel.Role);
@@ -119,6 +133,26 @@ public class UserService : IUserService
 
         return ApiResponse<UserOutputModel>.Ok(result);
     }
+
+    public async Task<ApiResponse<UserOutputModel>> ValidateCellphoneAndEmail(string cellphone, string email, int? userId)
+    {
+        var isEmailInUse = await _userRepository.VerifyEmailInUseAsync(email, userId);
+
+        if (isEmailInUse)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O email informado já está em uso");
+        }
+
+        var isCellphoneInUse = await _userRepository.VerifyCellphoneInUseAsync(cellphone, userId);
+
+        if (isCellphoneInUse)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O celular informado já está em uso");
+        }
+
+        return ApiResponse<UserOutputModel>.Ok();
+    }
+
 
     private ExpressionStarter<User>? GetFilters(UserQueryParams queryParams)
     {

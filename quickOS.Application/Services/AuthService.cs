@@ -17,6 +17,7 @@ public class AuthService : IAuthService
     private readonly ITenantRepository _tenantRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
+    private readonly IUserService _userService;
     private readonly IRequestProvider _requestProvider;
     private readonly IMapper _mapper;
 
@@ -25,6 +26,7 @@ public class AuthService : IAuthService
         ITenantRepository tenantRepository,
         IUnitOfWork unitOfWork,
         ITokenService tokenService,
+        IUserService userService,
         IRequestProvider requestProvider,
         IMapper mapper)
     {
@@ -32,6 +34,7 @@ public class AuthService : IAuthService
         _tenantRepository = tenantRepository;
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
+        _userService = userService;
         _requestProvider = requestProvider;
         _mapper = mapper;
     }
@@ -85,18 +88,11 @@ public class AuthService : IAuthService
 
     public async Task<ApiResponse<UserOutputModel>> RegisterAsync(RegisterInputModel registerInputModel)
     {
-        var isEmailInUse = await _userRepository.VerifyEmailInUseAsync(registerInputModel.Email);
+        var isValid = await _userService.ValidateCellphoneAndEmail(registerInputModel.Cellphone, registerInputModel.Email, null);
 
-        if (isEmailInUse)
+        if (!isValid.Success)
         {
-            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O email informado já está em uso");
-        }
-
-        var isCellphoneInUse = await _userRepository.VerifyCellphoneInUseAsync(registerInputModel.Cellphone);
-
-        if (isCellphoneInUse)
-        {
-            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.BadRequest, "O celular informado já está em uso");
+            return isValid;
         }
 
         var tenant = new Tenant(registerInputModel.TenantName, true);
