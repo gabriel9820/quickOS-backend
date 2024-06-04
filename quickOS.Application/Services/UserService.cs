@@ -130,11 +130,11 @@ public class UserService : IUserService
         }
         if (!string.IsNullOrEmpty(queryParams.Cellphone))
         {
-            predicate = predicate.And(x => x.Cellphone == queryParams.Cellphone);
+            predicate = predicate.And(x => x.Cellphone.Contains(queryParams.Cellphone));
         }
         if (!string.IsNullOrEmpty(queryParams.Email))
         {
-            predicate = predicate.And(x => x.Email == queryParams.Email);
+            predicate = predicate.And(x => x.Email.Contains(queryParams.Email));
         }
         if (queryParams.Role.HasValue)
         {
