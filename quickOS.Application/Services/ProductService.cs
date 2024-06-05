@@ -141,13 +141,13 @@ public class ProductService : IProductService
         {
             predicate = predicate.And(x => x.Stock == queryParams.Stock);
         }
+        if (queryParams.UnitsOfMeasurement?.Length > 0)
+        {
+            predicate = predicate.And(x => queryParams.UnitsOfMeasurement.Contains(x.UnitOfMeasurement.ExternalId));
+        }
         if (queryParams.IsActive.HasValue)
         {
             predicate = predicate.And(x => x.IsActive == queryParams.IsActive);
-        }
-        if (queryParams.UnitOfMeasurementExternalId.HasValue)
-        {
-            predicate = predicate.And(x => x.UnitOfMeasurement.ExternalId == queryParams.UnitOfMeasurementExternalId);
         }
 
         return predicate;
@@ -160,6 +160,7 @@ public class ProductService : IProductService
             "code" => x => x.Code,
             "name" => x => x.Name,
             "sellingPrice" => x => x.SellingPrice,
+            "stock" => x => x.Stock,
             "isActive" => x => x.IsActive,
             _ => null,
         };

@@ -45,5 +45,5 @@ public class ProductQueryParams : QueryParams
     public decimal? SellingPrice { get; set; }
     public decimal? Stock { get; set; }
     public bool? IsActive { get; set; }
-    public Guid? UnitOfMeasurementExternalId { get; set; }
+    public Guid[]? UnitsOfMeasurement { get; set; }
 }

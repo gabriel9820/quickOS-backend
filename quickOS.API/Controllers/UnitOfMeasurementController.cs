@@ -16,7 +16,7 @@ public class UnitOfMeasurementController : ControllerBase
         _unitOfMeasurementService = unitOfMeasurementService;
     }
 
-    [HttpGet]
+    [HttpGet("fill-autocomplete")]
     public async Task<IActionResult> FillAutocompleteAsync()
     {
         var result = await _unitOfMeasurementService.FillAutocompleteAsync();

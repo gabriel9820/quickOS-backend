@@ -32,7 +32,10 @@ public class ProductRepository : IProductRepository
         int currentPage,
         int pageSize)
     {
-        var query = _dbContext.Products.AsNoTracking().AsQueryable();
+        var query = _dbContext.Products
+            .AsNoTracking()
+            .Include(p => p.UnitOfMeasurement)
+            .AsQueryable();
 
         if (where != null)
         {
