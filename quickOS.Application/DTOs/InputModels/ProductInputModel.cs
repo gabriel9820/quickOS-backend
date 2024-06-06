@@ -35,7 +35,7 @@ public class ProductInputModel
     public bool IsActive { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
-    public Guid UnitOfMeasurementExternalId { get; set; }
+    public Guid UnitOfMeasurement { get; set; }
 }
 
 public class ProductQueryParams : QueryParams

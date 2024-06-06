@@ -9,7 +9,7 @@ public static class ProductMapping
 {
     public static async Task<Product> ToEntity(this ProductInputModel inputModel, IUnitOfMeasurementRepository unitOfMeasurementRepository)
     {
-        var unitOfMeasurement = await unitOfMeasurementRepository.GetByExternalIdAsync(inputModel.UnitOfMeasurementExternalId);
+        var unitOfMeasurement = await unitOfMeasurementRepository.GetByExternalIdAsync(inputModel.UnitOfMeasurement);
 
         return new Product(
             inputModel.Code,

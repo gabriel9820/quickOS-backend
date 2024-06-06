@@ -103,7 +103,7 @@ public class ProductService : IProductService
             return ApiResponse<ProductOutputModel>.Error(HttpStatusCode.NotFound, "Produto não encontrado");
         }
 
-        var unitOfMeasurement = await _unitOfMeasurementRepository.GetByExternalIdAsync(productInputModel.UnitOfMeasurementExternalId);
+        var unitOfMeasurement = await _unitOfMeasurementRepository.GetByExternalIdAsync(productInputModel.UnitOfMeasurement);
 
         product.UpdateCode(productInputModel.Code);
         product.UpdateName(productInputModel.Name);
