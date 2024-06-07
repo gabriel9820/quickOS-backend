@@ -5,6 +5,7 @@ namespace quickOS.Core.Entities;
 
 public class Customer : MultiTenantEntity
 {
+    public int Code { get; private set; }
     public CustomerType Type { get; private set; }
     public string Document { get; private set; }
     public string FullName { get; private set; }
@@ -18,8 +19,9 @@ public class Customer : MultiTenantEntity
 
     private Customer() { }
 
-    public Customer(CustomerType type, string document, string fullName, string cellphone, string email, bool isActive, Address address)
+    public Customer(int code, CustomerType type, string document, string fullName, string cellphone, string email, bool isActive, Address address)
     {
+        Code = code;
         Type = type;
         Document = document;
         FullName = fullName;
@@ -27,6 +29,11 @@ public class Customer : MultiTenantEntity
         Email = email;
         Address = address;
         IsActive = isActive;
+    }
+
+    public void UpdateCode(int code)
+    {
+        Code = code;
     }
 
     public void UpdateType(CustomerType type)
@@ -54,7 +61,7 @@ public class Customer : MultiTenantEntity
         Email = email;
     }
 
-    public void UpdateAddress(Address? address)
+    public void UpdateAddress(Address address)
     {
         Address = address;
     }

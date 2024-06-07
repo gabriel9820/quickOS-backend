@@ -11,12 +11,15 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
         builder.HasKey(c => c.Id);
 
         builder.HasIndex(c => c.ExternalId).IsUnique();
+        builder.HasIndex(c => new { c.Code, c.TenantId }).IsUnique();
         builder.HasIndex(c => new { c.Email, c.TenantId }).IsUnique();
         builder.HasIndex(c => new { c.Cellphone, c.TenantId }).IsUnique();
         builder.HasIndex(c => new { c.Document, c.TenantId }).IsUnique();
 
         builder.Property(c => c.CreatedAt).IsRequired();
         builder.Property(c => c.UpdatedAt).IsRequired();
+
+        builder.Property(c => c.Code).IsRequired();
 
         builder.Property(c => c.Type).IsRequired();
 
