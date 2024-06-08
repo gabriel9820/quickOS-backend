@@ -43,7 +43,7 @@ public class CustomerInputModel
 public class CustomerQueryParams : QueryParams
 {
     public int? Code { get; set; }
-    public CustomerType? Type { get; set; }
+    public CustomerType[]? Types { get; set; }
     public string? Document { get; set; } = string.Empty;
     public string? FullName { get; set; } = string.Empty;
     public string? Email { get; set; } = string.Empty;
