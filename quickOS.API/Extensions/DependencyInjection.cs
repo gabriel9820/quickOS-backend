@@ -12,6 +12,7 @@ using quickOS.Core.Services;
 using quickOS.Infra.Auth;
 using quickOS.Infra.Persistence;
 using quickOS.Infra.Persistence.Repositories;
+using quickOS.Infra.Services;
 
 namespace quickOS.API.Extensions;
 
@@ -104,8 +105,11 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<QuickOSDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("quickOS")));
+        services.AddHttpClient();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICepService, CepService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITenantRepository, TenantRepository>();
         services.AddScoped<ICustomerRepository, CustomerRepository>();

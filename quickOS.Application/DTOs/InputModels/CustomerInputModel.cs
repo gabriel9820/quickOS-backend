@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using quickOS.Application.Validations;
 using quickOS.Core.Enums;
 using quickOS.Core.Models;
 
@@ -16,6 +17,8 @@ public class CustomerInputModel
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [MinLength(14, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
     [MaxLength(18, ErrorMessage = "O campo {0} deve conter no máximo {1} caracteres")]
+    [RegularExpression(@"^\d{3}\.\d{3}\.\d{3}-\d{2}|\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$", ErrorMessage = "O campo {0} é inválido")]
+    [DocumentValidation]
     public string Document { get; set; } = string.Empty;
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
