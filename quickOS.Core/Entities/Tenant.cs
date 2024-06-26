@@ -14,10 +14,10 @@ public class Tenant : BaseEntity
 
     private Tenant() { }
 
-    public Tenant(string name)
+    public Tenant(string name, bool isActive)
     {
         Name = name;
-        IsActive = true;
+        IsActive = isActive;
     }
 
     public void UpdateName(string name)

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using quickOS.Infra.Persistence;
@@ -11,9 +12,11 @@ using quickOS.Infra.Persistence;
 namespace quickOS.Infra.Persistence.Migrations
 {
     [DbContext(typeof(QuickOSDbContext))]
-    partial class QuickOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240530153509_CellphoneRename")]
+    partial class CellphoneRename
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,9 +38,6 @@ namespace quickOS.Infra.Persistence.Migrations
                         .HasMaxLength(15)
                         .HasColumnType("character(15)")
                         .IsFixedLength();
-
-                    b.Property<int>("Code")
-                        .HasColumnType("integer");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -80,9 +80,6 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.HasIndex("TenantId");
 
                     b.HasIndex("Cellphone", "TenantId")
-                        .IsUnique();
-
-                    b.HasIndex("Code", "TenantId")
                         .IsUnique();
 
                     b.HasIndex("Document", "TenantId")
@@ -793,6 +790,51 @@ namespace quickOS.Infra.Persistence.Migrations
                         .WithMany("Users")
                         .HasForeignKey("TenantId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.OwnsOne("quickOS.Core.ValueObjects.Address", "Address", b1 =>
+                        {
+                            b1.Property<int>("UserId")
+                                .HasColumnType("integer");
+
+                            b1.Property<string>("City")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
+
+                            b1.Property<string>("Details")
+                                .HasMaxLength(100)
+                                .HasColumnType("character varying(100)");
+
+                            b1.Property<string>("Neighborhood")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
+
+                            b1.Property<string>("Number")
+                                .HasMaxLength(30)
+                                .HasColumnType("character varying(30)");
+
+                            b1.Property<string>("State")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
+
+                            b1.Property<string>("Street")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)");
+
+                            b1.Property<string>("ZipCode")
+                                .HasMaxLength(9)
+                                .HasColumnType("character(9)")
+                                .IsFixedLength();
+
+                            b1.HasKey("UserId");
+
+                            b1.ToTable("Users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId");
+                        });
+
+                    b.Navigation("Address")
                         .IsRequired();
 
                     b.Navigation("Tenant");

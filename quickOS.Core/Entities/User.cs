@@ -6,14 +6,13 @@ namespace quickOS.Core.Entities;
 public class User : BaseEntity
 {
     public string FullName { get; private set; }
-    public string CellPhone { get; private set; }
+    public string Cellphone { get; private set; }
     public string Email { get; private set; }
     public string Password { get; private set; }
     public bool IsActive { get; private set; }
     public UserRole Role { get; private set; }
     public Guid? RefreshToken { get; private set; }
     public DateTime? RefreshTokenExpiresIn { get; private set; }
-    public Address Address { get; private set; }
 
     /* Foreign Keys */
     public int TenantId { get; private set; }
@@ -24,16 +23,15 @@ public class User : BaseEntity
 
     private User() { }
 
-    public User(string fullName, string cellPhone, string email, string password, UserRole role, Tenant tenant, Address? address = default)
+    public User(string fullName, string cellphone, string email, string password, UserRole role, Tenant tenant, bool isActive)
     {
         FullName = fullName;
-        CellPhone = cellPhone;
+        Cellphone = cellphone;
         Email = email;
         Password = password;
-        IsActive = true;
+        IsActive = isActive;
         Role = role;
         Tenant = tenant;
-        Address = address ?? new Address();
     }
 
     public void UpdateFullName(string fullName)
@@ -43,7 +41,7 @@ public class User : BaseEntity
 
     public void UpdateCellphone(string cellphone)
     {
-        CellPhone = cellphone;
+        Cellphone = cellphone;
     }
 
     public void UpdatePassword(string password)
@@ -60,11 +58,6 @@ public class User : BaseEntity
     {
         RefreshToken = newRefreshToken;
         RefreshTokenExpiresIn = DateTime.UtcNow.AddDays(7);
-    }
-
-    public void UpdateAddress(Address? address)
-    {
-        Address = address;
     }
 
     public void UpdateIsActive(bool isActive)

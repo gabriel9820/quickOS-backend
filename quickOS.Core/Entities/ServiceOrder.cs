@@ -22,7 +22,58 @@ public class ServiceOrder : MultiTenantEntity
     public ICollection<ServiceOrderProduct>? Products { get; private set; }
     public ICollection<ServiceOrderService>? Services { get; private set; }
 
-    public void UpdateTotalPrice()
+    public ServiceOrder(
+       int number,
+       DateTime date,
+       ServiceOrderStatus status,
+       string? equipmentDescription,
+       string? problemDescription,
+       string? technicalReport,
+       Customer customer,
+       User technician,
+       ICollection<ServiceOrderProduct>? products,
+       ICollection<ServiceOrderService>? services)
+    {
+        Number = number;
+        Date = date;
+        Status = status;
+        EquipmentDescription = equipmentDescription;
+        ProblemDescription = problemDescription;
+        TechnicalReport = technicalReport;
+        Customer = customer;
+        Technician = technician;
+        Products = products;
+        Services = services;
+
+        CalculateTotalPrice();
+    }
+
+    public void UpdateStatus(ServiceOrderStatus status)
+    {
+        Status = status;
+    }
+
+    public void UpdateEquipmentDescription(string? equipmentDescription)
+    {
+        EquipmentDescription = equipmentDescription;
+    }
+
+    public void UpdateProblemDescription(string? problemDescription)
+    {
+        ProblemDescription = problemDescription;
+    }
+
+    public void UpdateTechnicalReport(string? technicalReport)
+    {
+        TechnicalReport = technicalReport;
+    }
+
+    public void UpdateTechnician(User technician)
+    {
+        Technician = technician;
+    }
+
+    public void CalculateTotalPrice()
     {
         var productsTotal = Products != null ? Products.Sum(p => p.TotalPrice) : 0;
         var servicesTotal = Services != null ? Services.Sum(s => s.TotalPrice) : 0;

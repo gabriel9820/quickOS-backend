@@ -13,13 +13,13 @@ public class ServiceProvided : MultiTenantEntity
 
     private ServiceProvided() { }
 
-    public ServiceProvided(int code, string name, string description, decimal price)
+    public ServiceProvided(int code, string name, string description, decimal price, bool isActive)
     {
         Code = code;
         Name = name;
         Description = description;
         Price = price;
-        IsActive = true;
+        IsActive = isActive;
     }
 
     public void UpdateCode(int code)

@@ -6,35 +6,34 @@ using quickOS.Core.Repositories;
 
 namespace quickOS.Infra.Persistence.Repositories;
 
-public class ProductRepository : IProductRepository
+public class ServiceOrderRepository : IServiceOrderRepository
 {
     private readonly QuickOSDbContext _dbContext;
 
-    public ProductRepository(QuickOSDbContext dbContext)
+    public ServiceOrderRepository(QuickOSDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task CreateAsync(Product product)
+    public async Task CreateAsync(ServiceOrder serviceOrder)
     {
-        await _dbContext.Products.AddAsync(product);
+        await _dbContext.ServiceOrders.AddAsync(serviceOrder);
     }
 
-    public void Delete(Product product)
+    public void Delete(ServiceOrder serviceOrder)
     {
-        _dbContext.Products.Remove(product);
+        _dbContext.ServiceOrders.Remove(serviceOrder);
     }
 
-    public async Task<PagedResult<Product>> GetAllAsync(
-        Expression<Func<Product, bool>>? where,
-        Expression<Func<Product, object>>? orderBy,
+    public async Task<PagedResult<ServiceOrder>> GetAllAsync(
+        Expression<Func<ServiceOrder, bool>>? where,
+        Expression<Func<ServiceOrder, object>>? orderBy,
         string? orderDirection,
         int currentPage,
         int pageSize)
     {
-        var query = _dbContext.Products
+        var query = _dbContext.ServiceOrders
             .AsNoTracking()
-            .Include(p => p.UnitOfMeasurement)
             .AsQueryable();
 
         if (where != null)
@@ -58,21 +57,20 @@ public class ProductRepository : IProductRepository
         return await query.ToPagedResultAsync(currentPage, pageSize);
     }
 
-    public async Task<Product?> GetByExternalIdAsync(Guid externalId)
+    public async Task<ServiceOrder?> GetByExternalIdAsync(Guid externalId)
     {
-        return await _dbContext.Products
-            .Include(p => p.UnitOfMeasurement)
-            .SingleOrDefaultAsync(p => p.ExternalId == externalId);
+        return await _dbContext.ServiceOrders
+            .SingleOrDefaultAsync(s => s.ExternalId == externalId);
     }
 
-    public async Task<int> GetNextCode()
+    public async Task<int> GetNextNumber()
     {
-        var lastCode = await _dbContext.Products.AsNoTracking().MaxAsync(p => (int?)p.Code) ?? 0;
-        return ++lastCode;
+        var lastNumber = await _dbContext.ServiceOrders.AsNoTracking().MaxAsync(s => (int?)s.Number) ?? 0;
+        return ++lastNumber;
     }
 
-    public void Update(Product product)
+    public void Update(ServiceOrder serviceOrder)
     {
-        _dbContext.Products.Update(product);
+        _dbContext.ServiceOrders.Update(serviceOrder);
     }
 }

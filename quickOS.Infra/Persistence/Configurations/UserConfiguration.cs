@@ -12,7 +12,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasIndex(u => u.ExternalId).IsUnique();
         builder.HasIndex(u => u.Email).IsUnique();
-        builder.HasIndex(u => u.CellPhone).IsUnique();
+        builder.HasIndex(u => u.Cellphone).IsUnique();
         builder.HasIndex(u => u.RefreshToken).IsUnique();
 
         builder.Property(u => u.CreatedAt).IsRequired();
@@ -22,7 +22,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMaxLength(200)
             .IsRequired();
 
-        builder.Property(u => u.CellPhone)
+        builder.Property(u => u.Cellphone)
             .HasMaxLength(15)
             .IsFixedLength()
             .IsRequired();
@@ -36,42 +36,6 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(u => u.IsActive).IsRequired();
 
         builder.Property(u => u.Role).IsRequired();
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.ZipCode)
-            .HasMaxLength(9)
-            .IsFixedLength()
-            .IsRequired(false);
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.Street)
-            .HasMaxLength(200)
-            .IsRequired(false);
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.Number)
-            .HasMaxLength(30)
-            .IsRequired(false);
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.Details)
-            .HasMaxLength(100)
-            .IsRequired(false);
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.Neighborhood)
-            .HasMaxLength(200)
-            .IsRequired(false);
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.City)
-            .HasMaxLength(200)
-            .IsRequired(false);
-
-        builder.OwnsOne(u => u.Address)
-            .Property(a => a.State)
-            .HasMaxLength(200)
-            .IsRequired(false);
 
         builder
             .HasOne(u => u.Tenant)

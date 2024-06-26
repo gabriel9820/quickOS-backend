@@ -12,6 +12,7 @@ using quickOS.Core.Services;
 using quickOS.Infra.Auth;
 using quickOS.Infra.Persistence;
 using quickOS.Infra.Persistence.Repositories;
+using quickOS.Infra.Services;
 
 namespace quickOS.API.Extensions;
 
@@ -92,9 +93,12 @@ public static class DependencyInjection
         services.AddScoped<IRequestProvider, RequestProvider>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ITenantService, TenantService>();
+        services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<IServiceOrderService, ServiceOrderService>();
         services.AddScoped<IServiceProvidedService, ServiceProvidedService>();
         services.AddScoped<IUnitOfMeasurementService, UnitOfMeasurementService>();
         services.AddScoped<IProductService, ProductService>();
+        services.AddScoped<IUserService, UserService>();
 
         return services;
     }
@@ -102,10 +106,15 @@ public static class DependencyInjection
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<QuickOSDbContext>(options => options.UseNpgsql(configuration.GetConnectionString("quickOS")));
+        services.AddHttpClient();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<ICepService, CepService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ITenantRepository, TenantRepository>();
+        services.AddScoped<ICustomerRepository, CustomerRepository>();
+        services.AddScoped<IServiceOrderRepository, ServiceOrderRepository>();
         services.AddScoped<IServiceProvidedRepository, ServiceProvidedRepository>();
         services.AddScoped<IUnitOfMeasurementRepository, UnitOfMeasurementRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
