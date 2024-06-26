@@ -22,6 +22,8 @@ public class ServiceOrder : MultiTenantEntity
     public ICollection<ServiceOrderProduct>? Products { get; private set; }
     public ICollection<ServiceOrderService>? Services { get; private set; }
 
+    private ServiceOrder() { }
+
     public ServiceOrder(
        int number,
        DateTime date,
