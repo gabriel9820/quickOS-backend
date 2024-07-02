@@ -141,7 +141,7 @@ public class ServiceOrderService : IServiceOrderService
         }
         if (queryParams.Date.HasValue)
         {
-            predicate = predicate.And(x => x.Date == queryParams.Date);
+            predicate = predicate.And(x => DateOnly.FromDateTime(x.Date) == DateOnly.FromDateTime(queryParams.Date.Value));
         }
         if (queryParams.Customer.HasValue)
         {
