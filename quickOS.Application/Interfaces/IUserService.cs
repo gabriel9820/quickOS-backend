@@ -8,6 +8,7 @@ public interface IUserService
 {
     Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel);
     Task<ApiResponse> DeleteAsync(Guid externalId);
+    Task<ApiResponse<IEnumerable<UserOutputModel>>> FillAutocompleteAsync();
     Task<ApiResponse<PagedResult<UserOutputModel>>> GetAllAsync(UserQueryParams queryParams);
     Task<ApiResponse<UserOutputModel>> GetByExternalIdAsync(Guid externalId);
     Task<ApiResponse<UserOutputModel>> UpdateAsync(Guid externalId, UserInputModel userInputModel);

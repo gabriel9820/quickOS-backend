@@ -31,6 +31,19 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("fill-autocomplete")]
+    public async Task<IActionResult> FillAutocompleteAsync()
+    {
+        var result = await _userService.FillAutocompleteAsync();
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return Ok(result.Data);
+    }
+
     [HttpGet("{externalId:Guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetByExternalId(Guid externalId)

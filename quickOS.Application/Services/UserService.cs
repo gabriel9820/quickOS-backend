@@ -65,6 +65,14 @@ public class UserService : IUserService
         return ApiResponse.Ok();
     }
 
+    public async Task<ApiResponse<IEnumerable<UserOutputModel>>> FillAutocompleteAsync()
+    {
+        var users = await _userRepository.FillAutocompleteAsync();
+        var usersDTO = users.ToOutputModel();
+
+        return ApiResponse<IEnumerable<UserOutputModel>>.Ok(usersDTO);
+    }
+
     public async Task<ApiResponse<PagedResult<UserOutputModel>>> GetAllAsync(UserQueryParams queryParams)
     {
         var filters = GetFilters(queryParams);

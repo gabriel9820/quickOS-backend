@@ -14,13 +14,11 @@ namespace quickOS.Application.Services;
 public class CustomerService : ICustomerService
 {
     private readonly ICustomerRepository _customerRepository;
-    private readonly IUnitOfMeasurementRepository _unitOfMeasurementRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CustomerService(ICustomerRepository customerRepository, IUnitOfMeasurementRepository unitOfMeasurementRepository, IUnitOfWork unitOfWork)
+    public CustomerService(ICustomerRepository customerRepository, IUnitOfWork unitOfWork)
     {
         _customerRepository = customerRepository;
-        _unitOfMeasurementRepository = unitOfMeasurementRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -49,6 +47,14 @@ public class CustomerService : ICustomerService
         await _unitOfWork.SaveChangesAsync();
 
         return ApiResponse.Ok();
+    }
+
+    public async Task<ApiResponse<IEnumerable<CustomerOutputModel>>> FillAutocompleteAsync()
+    {
+        var customers = await _customerRepository.FillAutocompleteAsync();
+        var customersDTO = customers.ToOutputModel();
+
+        return ApiResponse<IEnumerable<CustomerOutputModel>>.Ok(customersDTO);
     }
 
     public async Task<ApiResponse<PagedResult<CustomerOutputModel>>> GetAllAsync(CustomerQueryParams queryParams)
