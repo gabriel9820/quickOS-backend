@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using quickOS.Application.DTOs.InputModels;
+﻿using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.DTOs.OutputModels;
 using quickOS.Core.Entities;
 using quickOS.Core.Repositories;
@@ -12,7 +11,8 @@ public static class ServiceOrderMapping
         this ServiceOrderInputModel inputModel,
         ICustomerRepository customerRepository,
         IUserRepository userRepository,
-        IServiceProvidedRepository serviceProvidedRepository)
+        IServiceProvidedRepository serviceProvidedRepository,
+        IProductRepository productRepository)
     {
         var customer = await customerRepository.GetByExternalIdAsync(inputModel.Customer);
         var technician = await userRepository.GetByExternalIdAsync(inputModel.Technician);
@@ -33,6 +33,12 @@ public static class ServiceOrderMapping
             serviceOrder.AddService(service);
         }
 
+        foreach (var productInputModel in inputModel.Products)
+        {
+            var product = await productInputModel.ToEntity(productRepository);
+            serviceOrder.AddProduct(product);
+        }
+
         serviceOrder.CalculateTotalPrice();
 
         return serviceOrder;
@@ -43,6 +49,7 @@ public static class ServiceOrderMapping
         var customer = serviceOrder.Customer.ToOutputModel();
         var technician = serviceOrder.Technician.ToOutputModel();
         var services = serviceOrder.Services.ToOutputModel();
+        var products = serviceOrder.Products.ToOutputModel();
 
         return new ServiceOrderOutputModel(
             serviceOrder.ExternalId,
@@ -55,7 +62,8 @@ public static class ServiceOrderMapping
             serviceOrder.TotalPrice,
             customer,
             technician,
-            services);
+            services,
+            products);
     }
 
     public static IEnumerable<ServiceOrderOutputModel> ToOutputModel(this IEnumerable<ServiceOrder> serviceOrders)

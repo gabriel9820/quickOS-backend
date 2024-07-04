@@ -32,6 +32,8 @@ public class ServiceOrderInputModel
     public Guid Technician { get; set; }
 
     public IEnumerable<ServiceOrderServiceInputModel> Services { get; set; } = [];
+
+    public IEnumerable<ServiceOrderProductInputModel> Products { get; set; } = [];
 }
 
 public class ServiceOrderServiceInputModel
@@ -44,6 +46,26 @@ public class ServiceOrderServiceInputModel
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public Guid Service { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(0, 9999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    public double Quantity { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(0, 99999999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    public decimal Price { get; set; }
+}
+
+public class ServiceOrderProductInputModel
+{
+    public Guid? ExternalId { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(1, int.MaxValue, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    public int Item { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public Guid Product { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     [Range(0, 9999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]

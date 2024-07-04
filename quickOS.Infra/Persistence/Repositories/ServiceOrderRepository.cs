@@ -66,6 +66,8 @@ public class ServiceOrderRepository : IServiceOrderRepository
             .Include(x => x.Technician)
             .Include(x => x.Services)
             .ThenInclude(x => x.Service)
+            .Include(x => x.Products)
+            .ThenInclude(x => x.Product)
             .SingleOrDefaultAsync(s => s.ExternalId == externalId);
     }
 

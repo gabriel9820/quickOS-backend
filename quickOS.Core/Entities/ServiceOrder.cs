@@ -79,6 +79,16 @@ public class ServiceOrder : MultiTenantEntity
         Services.Remove(service);
     }
 
+    public void AddProduct(ServiceOrderProduct product)
+    {
+        Products.Add(product);
+    }
+
+    public void RemoveProduct(ServiceOrderProduct product)
+    {
+        Products.Remove(product);
+    }
+
     public void CalculateTotalPrice()
     {
         var productsTotal = Products != null ? Products.Sum(p => p.TotalPrice) : 0;

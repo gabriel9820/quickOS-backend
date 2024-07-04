@@ -17,6 +17,7 @@ public class ServiceOrderService : IServiceOrderService
     private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
     private readonly IServiceProvidedRepository _serviceProvidedRepository;
+    private readonly IProductRepository _productRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public ServiceOrderService(
@@ -24,18 +25,20 @@ public class ServiceOrderService : IServiceOrderService
         ICustomerRepository customerRepository,
         IUserRepository userRepository,
         IServiceProvidedRepository serviceProvidedRepository,
+        IProductRepository productRepository,
         IUnitOfWork unitOfWork)
     {
         _serviceOrderRepository = serviceOrderRepository;
         _customerRepository = customerRepository;
         _userRepository = userRepository;
         _serviceProvidedRepository = serviceProvidedRepository;
+        _productRepository = productRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<ApiResponse<ServiceOrderOutputModel>> CreateAsync(ServiceOrderInputModel serviceOrderInputModel)
     {
-        var serviceOrder = await serviceOrderInputModel.ToEntity(_customerRepository, _userRepository, _serviceProvidedRepository);
+        var serviceOrder = await serviceOrderInputModel.ToEntity(_customerRepository, _userRepository, _serviceProvidedRepository, _productRepository);
 
         await _serviceOrderRepository.CreateAsync(serviceOrder);
         await _unitOfWork.SaveChangesAsync();
@@ -121,6 +124,7 @@ public class ServiceOrderService : IServiceOrderService
         serviceOrder.UpdateTechnician(technician);
 
         await SetServices(serviceOrder, serviceOrderInputModel);
+        await SetProducts(serviceOrder, serviceOrderInputModel);
 
         serviceOrder.CalculateTotalPrice();
 
@@ -161,6 +165,40 @@ public class ServiceOrderService : IServiceOrderService
             {
                 var service = await serviceInputModel.ToEntity(_serviceProvidedRepository);
                 serviceOrder.AddService(service);
+            }
+        }
+    }
+
+    private async Task SetProducts(ServiceOrder serviceOrder, ServiceOrderInputModel serviceOrderInputModel)
+    {
+        var productsInputModelIds = serviceOrderInputModel.Products.Select(s => s.ExternalId).ToList();
+        var productsToRemove = serviceOrder.Products.Where(s => !productsInputModelIds.Contains(s.ExternalId)).ToList();
+        foreach (var product in productsToRemove)
+        {
+            serviceOrder.RemoveProduct(product);
+        }
+
+        foreach (var productInputModel in serviceOrderInputModel.Products)
+        {
+            if (productInputModel.ExternalId.HasValue)
+            {
+                var product = serviceOrder.Products.FirstOrDefault(x => x.ExternalId == productInputModel.ExternalId);
+
+                if (product != null)
+                {
+                    var productEntity = await _productRepository.GetByExternalIdAsync(productInputModel.Product);
+
+                    product.UpdateItem(productInputModel.Item);
+                    product.UpdateProduct(productEntity);
+                    product.UpdateQuantity(productInputModel.Quantity);
+                    product.UpdatePrice(productInputModel.Price);
+                    product.CalculateTotalPrice();
+                }
+            }
+            else
+            {
+                var product = await productInputModel.ToEntity(_productRepository);
+                serviceOrder.AddProduct(product);
             }
         }
     }
