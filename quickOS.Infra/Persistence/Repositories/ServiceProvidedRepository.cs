@@ -25,6 +25,15 @@ public class ServiceProvidedRepository : IServiceProvidedRepository
         _dbContext.ServicesProvided.Remove(service);
     }
 
+    public async Task<IEnumerable<ServiceProvided>> FillAutocompleteAsync()
+    {
+        return await _dbContext.ServicesProvided
+            .AsNoTracking()
+            .Where(x => x.IsActive)
+            .OrderBy(x => x.Name)
+            .ToListAsync();
+    }
+
     public async Task<PagedResult<ServiceProvided>> GetAllAsync(
         Expression<Func<ServiceProvided, bool>>? where,
         Expression<Func<ServiceProvided, object>>? orderBy,

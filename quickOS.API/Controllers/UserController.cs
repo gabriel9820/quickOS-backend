@@ -32,7 +32,7 @@ public class UserController : ControllerBase
     }
 
     [HttpGet("fill-autocomplete")]
-    public async Task<IActionResult> FillAutocompleteAsync()
+    public async Task<IActionResult> FillAutocomplete()
     {
         var result = await _userService.FillAutocompleteAsync();
 
