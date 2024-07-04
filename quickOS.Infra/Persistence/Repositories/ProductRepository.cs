@@ -25,6 +25,15 @@ public class ProductRepository : IProductRepository
         _dbContext.Products.Remove(product);
     }
 
+    public async Task<IEnumerable<Product>> FillAutocompleteAsync()
+    {
+        return await _dbContext.Products
+            .AsNoTracking()
+            .Where(x => x.IsActive)
+            .OrderBy(x => x.Name)
+            .ToListAsync();
+    }
+
     public async Task<PagedResult<Product>> GetAllAsync(
         Expression<Func<Product, bool>>? where,
         Expression<Func<Product, object>>? orderBy,

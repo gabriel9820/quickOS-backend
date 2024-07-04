@@ -30,6 +30,19 @@ public class ProductController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("fill-autocomplete")]
+    public async Task<IActionResult> FillAutocomplete()
+    {
+        var result = await _productService.FillAutocompleteAsync();
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return Ok(result.Data);
+    }
+
     [HttpGet("{externalId:Guid}")]
     public async Task<IActionResult> GetByExternalId(Guid externalId)
     {

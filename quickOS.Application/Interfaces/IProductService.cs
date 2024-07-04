@@ -8,6 +8,7 @@ public interface IProductService
 {
     Task<ApiResponse<ProductOutputModel>> CreateAsync(ProductInputModel productInputModel);
     Task<ApiResponse> DeleteAsync(Guid externalId);
+    Task<ApiResponse<IEnumerable<ProductOutputModel>>> FillAutocompleteAsync();
     Task<ApiResponse<PagedResult<ProductOutputModel>>> GetAllAsync(ProductQueryParams queryParams);
     Task<ApiResponse<ProductOutputModel>> GetByExternalIdAsync(Guid externalId);
     Task<ApiResponse<int>> GetNextCode();
