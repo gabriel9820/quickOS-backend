@@ -64,6 +64,8 @@ public class ServiceOrderRepository : IServiceOrderRepository
         return await _dbContext.ServiceOrders
             .Include(x => x.Customer)
             .Include(x => x.Technician)
+            .Include(x => x.Services)
+            .ThenInclude(x => x.Service)
             .SingleOrDefaultAsync(s => s.ExternalId == externalId);
     }
 

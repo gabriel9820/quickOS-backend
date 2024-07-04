@@ -19,8 +19,8 @@ public class ServiceOrder : MultiTenantEntity
     /* Navigation */
     public Customer Customer { get; private set; }
     public User Technician { get; private set; }
-    public ICollection<ServiceOrderProduct>? Products { get; private set; }
-    public ICollection<ServiceOrderService>? Services { get; private set; }
+    public ICollection<ServiceOrderProduct> Products { get; private set; } = [];
+    public ICollection<ServiceOrderService> Services { get; private set; } = [];
 
     private ServiceOrder() { }
 
@@ -32,9 +32,7 @@ public class ServiceOrder : MultiTenantEntity
        string? problemDescription,
        string? technicalReport,
        Customer customer,
-       User technician,
-       ICollection<ServiceOrderProduct>? products,
-       ICollection<ServiceOrderService>? services)
+       User technician)
     {
         Number = number;
         Date = date;
@@ -44,10 +42,6 @@ public class ServiceOrder : MultiTenantEntity
         TechnicalReport = technicalReport;
         Customer = customer;
         Technician = technician;
-        Products = products;
-        Services = services;
-
-        CalculateTotalPrice();
     }
 
     public void UpdateStatus(ServiceOrderStatus status)
@@ -73,6 +67,16 @@ public class ServiceOrder : MultiTenantEntity
     public void UpdateTechnician(User technician)
     {
         Technician = technician;
+    }
+
+    public void AddService(ServiceOrderService service)
+    {
+        Services.Add(service);
+    }
+
+    public void RemoveService(ServiceOrderService service)
+    {
+        Services.Remove(service);
     }
 
     public void CalculateTotalPrice()

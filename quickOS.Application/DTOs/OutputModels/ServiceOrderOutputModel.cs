@@ -14,8 +14,9 @@ public class ServiceOrderOutputModel
     public decimal TotalPrice { get; private set; }
     public CustomerOutputModel Customer { get; private set; }
     public UserOutputModel Technician { get; private set; }
+    public IEnumerable<ServiceOrderServiceOutputModel> Services { get; private set; }
 
-    public ServiceOrderOutputModel(Guid externalId, int number, DateTime date, ServiceOrderStatus status, string? equipmentDescription, string? problemDescription, string? technicalReport, decimal totalPrice, CustomerOutputModel customer, UserOutputModel technician)
+    public ServiceOrderOutputModel(Guid externalId, int number, DateTime date, ServiceOrderStatus status, string? equipmentDescription, string? problemDescription, string? technicalReport, decimal totalPrice, CustomerOutputModel customer, UserOutputModel technician, IEnumerable<ServiceOrderServiceOutputModel> services)
     {
         ExternalId = externalId;
         Number = number;
@@ -27,5 +28,26 @@ public class ServiceOrderOutputModel
         TotalPrice = totalPrice;
         Customer = customer;
         Technician = technician;
+        Services = services;
+    }
+}
+
+public class ServiceOrderServiceOutputModel
+{
+    public Guid ExternalId { get; private set; }
+    public int Item { get; private set; }
+    public ServiceProvidedOutputModel Service { get; private set; }
+    public double Quantity { get; private set; }
+    public decimal Price { get; private set; }
+    public decimal TotalPrice { get; private set; }
+
+    public ServiceOrderServiceOutputModel(Guid externalId, int item, ServiceProvidedOutputModel service, double quantity, decimal price, decimal totalPrice)
+    {
+        ExternalId = externalId;
+        Item = item;
+        Service = service;
+        Quantity = quantity;
+        Price = price;
+        TotalPrice = totalPrice;
     }
 }

@@ -16,26 +16,26 @@ public class ServiceOrderService : IServiceOrderService
     private readonly IServiceOrderRepository _serviceOrderRepository;
     private readonly ICustomerRepository _customerRepository;
     private readonly IUserRepository _userRepository;
-    private readonly IUnitOfMeasurementRepository _unitOfMeasurementRepository;
+    private readonly IServiceProvidedRepository _serviceProvidedRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public ServiceOrderService(
         IServiceOrderRepository serviceOrderRepository,
         ICustomerRepository customerRepository,
         IUserRepository userRepository,
-        IUnitOfMeasurementRepository unitOfMeasurementRepository,
+        IServiceProvidedRepository serviceProvidedRepository,
         IUnitOfWork unitOfWork)
     {
         _serviceOrderRepository = serviceOrderRepository;
         _customerRepository = customerRepository;
         _userRepository = userRepository;
-        _unitOfMeasurementRepository = unitOfMeasurementRepository;
+        _serviceProvidedRepository = serviceProvidedRepository;
         _unitOfWork = unitOfWork;
     }
 
     public async Task<ApiResponse<ServiceOrderOutputModel>> CreateAsync(ServiceOrderInputModel serviceOrderInputModel)
     {
-        var serviceOrder = await serviceOrderInputModel.ToEntity(_customerRepository, _userRepository);
+        var serviceOrder = await serviceOrderInputModel.ToEntity(_customerRepository, _userRepository, _serviceProvidedRepository);
 
         await _serviceOrderRepository.CreateAsync(serviceOrder);
         await _unitOfWork.SaveChangesAsync();
@@ -119,12 +119,50 @@ public class ServiceOrderService : IServiceOrderService
         serviceOrder.UpdateProblemDescription(serviceOrderInputModel.ProblemDescription);
         serviceOrder.UpdateTechnicalReport(serviceOrderInputModel.TechnicalReport);
         serviceOrder.UpdateTechnician(technician);
+
+        await SetServices(serviceOrder, serviceOrderInputModel);
+
         serviceOrder.CalculateTotalPrice();
+
         await _unitOfWork.SaveChangesAsync();
 
         var result = serviceOrder.ToOutputModel();
 
         return ApiResponse<ServiceOrderOutputModel>.Ok(result);
+    }
+
+    private async Task SetServices(ServiceOrder serviceOrder, ServiceOrderInputModel serviceOrderInputModel)
+    {
+        var servicesInputModelIds = serviceOrderInputModel.Services.Select(s => s.ExternalId).ToList();
+        var servicesToRemove = serviceOrder.Services.Where(s => !servicesInputModelIds.Contains(s.ExternalId)).ToList();
+        foreach (var service in servicesToRemove)
+        {
+            serviceOrder.RemoveService(service);
+        }
+
+        foreach (var serviceInputModel in serviceOrderInputModel.Services)
+        {
+            if (serviceInputModel.ExternalId.HasValue)
+            {
+                var service = serviceOrder.Services.FirstOrDefault(x => x.ExternalId == serviceInputModel.ExternalId);
+
+                if (service != null)
+                {
+                    var serviceProvided = await _serviceProvidedRepository.GetByExternalIdAsync(serviceInputModel.Service);
+
+                    service.UpdateItem(serviceInputModel.Item);
+                    service.UpdateService(serviceProvided);
+                    service.UpdateQuantity(serviceInputModel.Quantity);
+                    service.UpdatePrice(serviceInputModel.Price);
+                    service.CalculateTotalPrice();
+                }
+            }
+            else
+            {
+                var service = await serviceInputModel.ToEntity(_serviceProvidedRepository);
+                serviceOrder.AddService(service);
+            }
+        }
     }
 
     private ExpressionStarter<ServiceOrder>? GetFilters(ServiceOrderQueryParams queryParams)

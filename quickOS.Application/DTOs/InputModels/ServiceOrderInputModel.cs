@@ -30,6 +30,28 @@ public class ServiceOrderInputModel
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]
     public Guid Technician { get; set; }
+
+    public IEnumerable<ServiceOrderServiceInputModel> Services { get; set; } = [];
+}
+
+public class ServiceOrderServiceInputModel
+{
+    public Guid? ExternalId { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(1, int.MaxValue, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    public int Item { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public Guid Service { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(0, 9999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    public double Quantity { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [Range(0, 99999999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    public decimal Price { get; set; }
 }
 
 public class ServiceOrderQueryParams : QueryParams
