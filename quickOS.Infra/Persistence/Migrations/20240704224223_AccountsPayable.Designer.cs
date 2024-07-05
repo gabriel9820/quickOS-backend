@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using quickOS.Infra.Persistence;
@@ -11,9 +12,11 @@ using quickOS.Infra.Persistence;
 namespace quickOS.Infra.Persistence.Migrations
 {
     [DbContext(typeof(QuickOSDbContext))]
-    partial class QuickOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240704224223_AccountsPayable")]
+    partial class AccountsPayable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,9 +55,6 @@ namespace quickOS.Infra.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<DateOnly>("IssueDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly?>("PaymentDate")
                         .HasColumnType("date");
 
                     b.Property<int>("TenantId")
