@@ -19,6 +19,7 @@ public class QuickOSDbContext : DbContext
     public DbSet<UnitOfMeasurement> UnitsOfMeasurement { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<AccountPayable> AccountsPayable { get; set; }
+    public DbSet<AccountReceivable> AccountsReceivable { get; set; }
 
     public QuickOSDbContext(DbContextOptions<QuickOSDbContext> options, IRequestProvider requestProvider) : base(options)
     {
@@ -39,6 +40,7 @@ public class QuickOSDbContext : DbContext
         modelBuilder.Entity<ServiceProvided>().HasQueryFilter(s => s.TenantId == _requestProvider.TenantId);
         modelBuilder.Entity<User>().HasQueryFilter(u => u.TenantId == _requestProvider.TenantId);
         modelBuilder.Entity<AccountPayable>().HasQueryFilter(a => a.TenantId == _requestProvider.TenantId);
+        modelBuilder.Entity<AccountReceivable>().HasQueryFilter(a => a.TenantId == _requestProvider.TenantId);
 
         modelBuilder.Seed();
     }

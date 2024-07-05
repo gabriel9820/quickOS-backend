@@ -16,6 +16,7 @@ public class Customer : MultiTenantEntity
 
     /* Navigation */
     public ICollection<ServiceOrder>? ServiceOrders { get; private set; }
+    public ICollection<AccountReceivable>? AccountsReceivable { get; private set; }
 
     private Customer() { }
 

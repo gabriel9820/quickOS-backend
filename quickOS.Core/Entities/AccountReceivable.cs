@@ -1,6 +1,6 @@
 ﻿namespace quickOS.Core.Entities;
 
-public class AccountPayable : MultiTenantEntity
+public class AccountReceivable : MultiTenantEntity
 {
     public DateOnly IssueDate { get; private set; }
     public DateOnly DueDate { get; private set; }
@@ -10,9 +10,26 @@ public class AccountPayable : MultiTenantEntity
     public decimal Value { get; private set; }
     public bool IsPaidOut { get; private set; }
 
-    private AccountPayable() { }
+    /* Foreign Keys */
+    public int? CustomerId { get; private set; }
+    public int? ServiceOrderId { get; private set; }
 
-    public AccountPayable(DateOnly issueDate, DateOnly dueDate, DateOnly? paymentDate, string? documentNumber, string description, decimal value, bool isPaidOut)
+    /* Navigation */
+    public Customer? Customer { get; private set; }
+    public ServiceOrder? ServiceOrder { get; private set; }
+
+    private AccountReceivable() { }
+
+    public AccountReceivable(
+        DateOnly issueDate,
+        DateOnly dueDate,
+        DateOnly? paymentDate,
+        string? documentNumber,
+        string description,
+        decimal value,
+        bool isPaidOut,
+        Customer? customer,
+        ServiceOrder? serviceOrder)
     {
         IssueDate = issueDate;
         DueDate = dueDate;
@@ -21,6 +38,8 @@ public class AccountPayable : MultiTenantEntity
         Description = description;
         Value = value;
         IsPaidOut = isPaidOut;
+        Customer = customer;
+        ServiceOrder = serviceOrder;
     }
 
     public void UpdateIssueDate(DateOnly issueDate)
@@ -56,5 +75,10 @@ public class AccountPayable : MultiTenantEntity
     public void UpdateIsPaidOut(bool isPaidOut)
     {
         IsPaidOut = isPaidOut;
+    }
+
+    public void UpdateCustomer(Customer? customer)
+    {
+        Customer = customer;
     }
 }

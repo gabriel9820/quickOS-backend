@@ -100,6 +100,7 @@ public static class DependencyInjection
         services.AddScoped<IProductService, ProductService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IAccountPayableService, AccountPayableService>();
+        services.AddScoped<IAccountReceivableService, AccountReceivableService>();
 
         return services;
     }
@@ -120,6 +121,7 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfMeasurementRepository, UnitOfMeasurementRepository>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<IAccountPayableRepository, AccountPayableRepository>();
+        services.AddScoped<IAccountReceivableRepository, AccountReceivableRepository>();
 
         return services;
     }

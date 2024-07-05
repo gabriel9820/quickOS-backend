@@ -12,6 +12,7 @@ public class Tenant : BaseEntity
     public ICollection<Customer>? Customers { get; private set; }
     public ICollection<ServiceOrder>? ServiceOrders { get; private set; }
     public ICollection<AccountPayable>? AccountsPayable { get; private set; }
+    public ICollection<AccountReceivable>? AccountsReceivable { get; private set; }
 
     private Tenant() { }
 

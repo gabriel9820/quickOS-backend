@@ -21,6 +21,7 @@ public class ServiceOrder : MultiTenantEntity
     public User Technician { get; private set; }
     public ICollection<ServiceOrderProduct> Products { get; private set; } = [];
     public ICollection<ServiceOrderService> Services { get; private set; } = [];
+    public ICollection<AccountReceivable>? AccountsReceivable { get; private set; }
 
     private ServiceOrder() { }
 
