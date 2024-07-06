@@ -34,6 +34,7 @@ public class AccountReceivableRepository : IAccountReceivableRepository
     {
         var query = _dbContext.AccountsReceivable
             .AsNoTracking()
+            .Include(x => x.Customer)
             .AsQueryable();
 
         if (where != null)
@@ -60,6 +61,7 @@ public class AccountReceivableRepository : IAccountReceivableRepository
     public async Task<AccountReceivable?> GetByExternalIdAsync(Guid externalId)
     {
         return await _dbContext.AccountsReceivable
+            .Include(x => x.Customer)
             .SingleOrDefaultAsync(c => c.ExternalId == externalId);
     }
 
