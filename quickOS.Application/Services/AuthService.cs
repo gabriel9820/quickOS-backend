@@ -45,7 +45,7 @@ public class AuthService : IAuthService
 
         if (user == null || !BC.Verify(loginInputModel.Password, user.Password))
         {
-            return ApiResponse<LoginOutputModel>.Error(HttpStatusCode.Unauthorized, "Email e/ou senha incorretos");
+            return ApiResponse<LoginOutputModel>.Error(HttpStatusCode.BadRequest, "Email e/ou senha incorretos");
         }
 
         var (accessToken, refreshToken) = _tokenService.GenerateTokens(user);
