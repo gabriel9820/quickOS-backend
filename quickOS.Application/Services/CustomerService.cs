@@ -24,14 +24,22 @@ public class CustomerService : ICustomerService
 
     public async Task<ApiResponse<CustomerOutputModel>> CreateAsync(CustomerInputModel customerInputModel)
     {
-        var customer = customerInputModel.ToEntity();
+        try
+        {
+            var customer = customerInputModel.ToEntity();
 
-        await _customerRepository.CreateAsync(customer);
-        await _unitOfWork.SaveChangesAsync();
+            await _customerRepository.CreateAsync(customer);
+            await _unitOfWork.SaveChangesAsync();
 
-        var createdCustomer = customer.ToOutputModel();
+            var createdCustomer = customer.ToOutputModel();
 
-        return ApiResponse<CustomerOutputModel>.Ok(createdCustomer);
+            return ApiResponse<CustomerOutputModel>.Ok(createdCustomer);
+        }
+        catch (Exception ex) when (ex.InnerException != null && ex.InnerException.Message.Contains("23505:"))
+        {
+            var field = GetFieldFromExceptionMessage(ex.InnerException.Message);
+            return ApiResponse<CustomerOutputModel>.Error(HttpStatusCode.BadRequest, $"Já existe um cliente com o {field} informado");
+        }
     }
 
     public async Task<ApiResponse> DeleteAsync(Guid externalId)
@@ -102,28 +110,36 @@ public class CustomerService : ICustomerService
 
     public async Task<ApiResponse<CustomerOutputModel>> UpdateAsync(Guid externalId, CustomerInputModel customerInputModel)
     {
-        var customer = await _customerRepository.GetByExternalIdAsync(externalId);
-
-        if (customer == null)
+        try
         {
-            return ApiResponse<CustomerOutputModel>.Error(HttpStatusCode.NotFound, "Cliente não encontrado");
+            var customer = await _customerRepository.GetByExternalIdAsync(externalId);
+
+            if (customer == null)
+            {
+                return ApiResponse<CustomerOutputModel>.Error(HttpStatusCode.NotFound, "Cliente não encontrado");
+            }
+
+            var address = customerInputModel.Address?.ToValueObject();
+
+            customer.UpdateCode(customerInputModel.Code);
+            customer.UpdateType(customerInputModel.Type);
+            customer.UpdateDocument(customerInputModel.Document);
+            customer.UpdateFullName(customerInputModel.FullName);
+            customer.UpdateCellphone(customerInputModel.Cellphone);
+            customer.UpdateEmail(customerInputModel.Email);
+            customer.UpdateAddress(address);
+            customer.UpdateIsActive(customerInputModel.IsActive);
+            await _unitOfWork.SaveChangesAsync();
+
+            var result = customer.ToOutputModel();
+
+            return ApiResponse<CustomerOutputModel>.Ok(result);
         }
-
-        var address = customerInputModel.Address?.ToValueObject();
-
-        customer.UpdateCode(customerInputModel.Code);
-        customer.UpdateType(customerInputModel.Type);
-        customer.UpdateDocument(customerInputModel.Document);
-        customer.UpdateFullName(customerInputModel.FullName);
-        customer.UpdateCellphone(customerInputModel.Cellphone);
-        customer.UpdateEmail(customerInputModel.Email);
-        customer.UpdateAddress(address);
-        customer.UpdateIsActive(customerInputModel.IsActive);
-        await _unitOfWork.SaveChangesAsync();
-
-        var result = customer.ToOutputModel();
-
-        return ApiResponse<CustomerOutputModel>.Ok(result);
+        catch (Exception ex) when (ex.InnerException != null && ex.InnerException.Message.Contains("23505:"))
+        {
+            var field = GetFieldFromExceptionMessage(ex.InnerException.Message);
+            return ApiResponse<CustomerOutputModel>.Error(HttpStatusCode.BadRequest, $"Já existe um cliente com o {field} informado");
+        }
     }
 
     private ExpressionStarter<Customer>? GetFilters(CustomerQueryParams queryParams)
@@ -169,5 +185,26 @@ public class CustomerService : ICustomerService
             "isActive" => x => x.IsActive,
             _ => null,
         };
+    }
+
+    private string GetFieldFromExceptionMessage(string message)
+    {
+        var fieldMappings = new Dictionary<string, string>
+        {
+            { "Document", "Documento" },
+            { "Code", "Código" },
+            { "Cellphone", "Celular" },
+            { "Email", "E-mail" }
+        };
+
+        foreach (var mapping in fieldMappings)
+        {
+            if (message.Contains(mapping.Key))
+            {
+                return mapping.Value;
+            }
+        }
+
+        return "Campo desconhecido";
     }
 }
