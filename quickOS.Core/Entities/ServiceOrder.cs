@@ -47,7 +47,10 @@ public class ServiceOrder : MultiTenantEntity
 
     public void UpdateStatus(ServiceOrderStatus status)
     {
-        Status = status;
+        if (status != ServiceOrderStatus.Invoiced)
+        {
+            Status = status;
+        }
     }
 
     public void UpdateEquipmentDescription(string? equipmentDescription)
