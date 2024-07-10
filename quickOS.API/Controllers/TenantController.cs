@@ -30,10 +30,10 @@ public class TenantController : ControllerBase
         return Ok(result.Data);
     }
 
-    [HttpPut]
-    public async Task<IActionResult> Update([FromBody] TenantInputModel inputModel)
+    [HttpPut("current")]
+    public async Task<IActionResult> UpdateCurrent([FromBody] TenantInputModel inputModel)
     {
-        var result = await _tenantService.UpdateAsync(inputModel);
+        var result = await _tenantService.UpdateCurrentAsync(inputModel);
 
         if (!result.Success)
         {

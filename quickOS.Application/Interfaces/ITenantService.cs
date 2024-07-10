@@ -6,5 +6,5 @@ namespace quickOS.Application.Interfaces;
 public interface ITenantService
 {
     Task<ApiResponse<TenantOutputModel>> GetCurrentAsync();
-    Task<ApiResponse<TenantOutputModel>> UpdateAsync(TenantInputModel inputModel);
+    Task<ApiResponse<TenantOutputModel>> UpdateCurrentAsync(TenantInputModel inputModel);
 }

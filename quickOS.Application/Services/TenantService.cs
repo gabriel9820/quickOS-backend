@@ -36,7 +36,7 @@ public class TenantService : ITenantService
         return ApiResponse<TenantOutputModel>.Ok(result);
     }
 
-    public async Task<ApiResponse<TenantOutputModel>> UpdateAsync(TenantInputModel inputModel)
+    public async Task<ApiResponse<TenantOutputModel>> UpdateCurrentAsync(TenantInputModel inputModel)
     {
         var tenant = await _tenantRepository.GetByIdAsync(_requestProvider.TenantId);
 
