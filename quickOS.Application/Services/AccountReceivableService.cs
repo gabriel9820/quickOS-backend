@@ -45,6 +45,11 @@ public class AccountReceivableService : IAccountReceivableService
             return ApiResponse.Error(HttpStatusCode.NotFound, "Conta a receber não encontrada");
         }
 
+        if (accountReceivable.ServiceOrderId.GetValueOrDefault() > 0)
+        {
+            return ApiResponse<AccountReceivableOutputModel>.Error(HttpStatusCode.BadRequest, "Conta a receber gerado por uma OS, não é permitido a exclusão");
+        }
+
         _accountReceivableRepository.Delete(accountReceivable);
         await _unitOfWork.SaveChangesAsync();
 
@@ -94,6 +99,11 @@ public class AccountReceivableService : IAccountReceivableService
         if (accountReceivable == null)
         {
             return ApiResponse<AccountReceivableOutputModel>.Error(HttpStatusCode.NotFound, "Conta a receber não encontrada");
+        }
+
+        if (accountReceivable.ServiceOrderId.GetValueOrDefault() > 0)
+        {
+            return ApiResponse<AccountReceivableOutputModel>.Error(HttpStatusCode.BadRequest, "Conta a receber gerado por uma OS, não é permitido a alteração");
         }
 
         var customer = accountReceivableInputModel.Customer.HasValue

@@ -6,6 +6,7 @@ using quickOS.Application.DTOs.OutputModels;
 using quickOS.Application.Interfaces;
 using quickOS.Application.Mappings;
 using quickOS.Core.Entities;
+using quickOS.Core.Enums;
 using quickOS.Core.Models;
 using quickOS.Core.Repositories;
 
@@ -18,6 +19,7 @@ public class ServiceOrderService : IServiceOrderService
     private readonly IUserRepository _userRepository;
     private readonly IServiceProvidedRepository _serviceProvidedRepository;
     private readonly IProductRepository _productRepository;
+    private readonly IAccountReceivableRepository _accountReceivableRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public ServiceOrderService(
@@ -26,6 +28,7 @@ public class ServiceOrderService : IServiceOrderService
         IUserRepository userRepository,
         IServiceProvidedRepository serviceProvidedRepository,
         IProductRepository productRepository,
+        IAccountReceivableRepository accountReceivableRepository,
         IUnitOfWork unitOfWork)
     {
         _serviceOrderRepository = serviceOrderRepository;
@@ -33,6 +36,7 @@ public class ServiceOrderService : IServiceOrderService
         _userRepository = userRepository;
         _serviceProvidedRepository = serviceProvidedRepository;
         _productRepository = productRepository;
+        _accountReceivableRepository = accountReceivableRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -54,7 +58,7 @@ public class ServiceOrderService : IServiceOrderService
 
         if (serviceOrder == null)
         {
-            return ApiResponse.Error(HttpStatusCode.NotFound, "Cliente não encontrado");
+            return ApiResponse.Error(HttpStatusCode.NotFound, "Ordem de serviço não encontrada");
         }
 
         _serviceOrderRepository.Delete(serviceOrder);
@@ -91,7 +95,7 @@ public class ServiceOrderService : IServiceOrderService
 
         if (serviceOrder == null)
         {
-            return ApiResponse<ServiceOrderOutputModel>.Error(HttpStatusCode.NotFound, "Cliente não encontrado");
+            return ApiResponse<ServiceOrderOutputModel>.Error(HttpStatusCode.NotFound, "Ordem de serviço não encontrada");
         }
 
         var result = serviceOrder.ToOutputModel();
@@ -106,13 +110,59 @@ public class ServiceOrderService : IServiceOrderService
         return ApiResponse<int>.Ok(nextNumber);
     }
 
+    public async Task<ApiResponse> InvoiceAsync(Guid externalId, ServiceOrderInvoiceInputModel inputModel)
+    {
+        var serviceOrder = await _serviceOrderRepository.GetByExternalIdAsync(externalId);
+
+        if (serviceOrder == null)
+        {
+            return ApiResponse.Error(HttpStatusCode.NotFound, "Ordem de serviço não encontrada");
+        }
+
+        if (serviceOrder.Status == ServiceOrderStatus.Invoiced)
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "Ordem de serviço já faturada");
+        }
+
+        if (serviceOrder.TotalPrice <= 0)
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "Ordem de serviço não possui valor, informe os serviços e/ou produtos no lançamento");
+        }
+
+        var dueDate = inputModel.PaymentType == PaymentType.InstallmentPayment ? inputModel.DueDate!.Value : inputModel.Now;
+        DateOnly? paymentDate = inputModel.PaymentType == PaymentType.CashPayment ? inputModel.Now : null;
+        var isPaidOut = inputModel.PaymentType == PaymentType.CashPayment;
+
+        var accountReceivable = new AccountReceivable(
+            inputModel.Now,
+            dueDate,
+            paymentDate,
+            serviceOrder.Number.ToString(),
+            $"Recebimento referente a OS: {serviceOrder.Number} de {serviceOrder.Customer.FullName}",
+            serviceOrder.TotalPrice,
+            isPaidOut,
+            serviceOrder.Customer,
+            serviceOrder);
+        serviceOrder.Invoice();
+
+        await _accountReceivableRepository.CreateAsync(accountReceivable);
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse.Ok();
+    }
+
     public async Task<ApiResponse<ServiceOrderOutputModel>> UpdateAsync(Guid externalId, ServiceOrderInputModel serviceOrderInputModel)
     {
         var serviceOrder = await _serviceOrderRepository.GetByExternalIdAsync(externalId);
 
         if (serviceOrder == null)
         {
-            return ApiResponse<ServiceOrderOutputModel>.Error(HttpStatusCode.NotFound, "Cliente não encontrado");
+            return ApiResponse<ServiceOrderOutputModel>.Error(HttpStatusCode.NotFound, "Ordem de serviço não encontrada");
+        }
+
+        if (serviceOrder.Status == ServiceOrderStatus.Invoiced)
+        {
+            return ApiResponse<ServiceOrderOutputModel>.Error(HttpStatusCode.BadRequest, "Ordem de serviço faturada, não é permitido a alteração");
         }
 
         var technician = await _userRepository.GetByExternalIdAsync(serviceOrderInputModel.Technician);

@@ -100,4 +100,9 @@ public class ServiceOrder : MultiTenantEntity
 
         TotalPrice = productsTotal + servicesTotal;
     }
+
+    public void Invoice()
+    {
+        Status = ServiceOrderStatus.Invoiced;
+    }
 }

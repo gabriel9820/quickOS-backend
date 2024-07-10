@@ -11,5 +11,6 @@ public interface IServiceOrderService
     Task<ApiResponse<PagedResult<ServiceOrderOutputModel>>> GetAllAsync(ServiceOrderQueryParams queryParams);
     Task<ApiResponse<ServiceOrderOutputModel>> GetByExternalIdAsync(Guid externalId);
     Task<ApiResponse<int>> GetNextNumber();
+    Task<ApiResponse> InvoiceAsync(Guid externalId, ServiceOrderInvoiceInputModel inputModel);
     Task<ApiResponse<ServiceOrderOutputModel>> UpdateAsync(Guid externalId, ServiceOrderInputModel serviceOrderInputModel);
 }

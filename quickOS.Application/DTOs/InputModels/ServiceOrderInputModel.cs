@@ -84,3 +84,14 @@ public class ServiceOrderQueryParams : QueryParams
     public Guid? Customer { get; set; }
     public Guid? Technician { get; set; }
 }
+
+public class ServiceOrderInvoiceInputModel
+{
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public PaymentType PaymentType { get; set; }
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public DateOnly Now { get; set; }
+
+    public DateOnly? DueDate { get; set; }
+}
