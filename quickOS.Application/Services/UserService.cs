@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using BC = BCrypt.Net.BCrypt;
+using System.Linq.Expressions;
 using System.Net;
 using LinqKit;
 using quickOS.Application.DTOs.InputModels;
@@ -24,6 +25,26 @@ public class UserService : IUserService
         _tenantRepository = tenantRepository;
         _requestProvider = requestProvider;
         _unitOfWork = unitOfWork;
+    }
+
+    public async Task<ApiResponse> ChangePasswordAsync(ChangePasswordInputModel inputModel)
+    {
+        var user = await _userRepository.GetByIdAsync(_requestProvider.UserId);
+
+        if (user == null)
+        {
+            return ApiResponse.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
+        }
+
+        if (!BC.Verify(inputModel.CurrentPassword, user.Password))
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "A senha atual está incorreta");
+        }
+
+        user.UpdatePassword(BC.HashPassword(inputModel.NewPassword));
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse.Ok();
     }
 
     public async Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel)

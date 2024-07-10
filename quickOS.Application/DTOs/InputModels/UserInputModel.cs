@@ -49,6 +49,16 @@ public class UserProfileInputModel
     public string Cellphone { get; set; } = string.Empty;
 }
 
+public class ChangePasswordInputModel
+{
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    public string CurrentPassword { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "O campo {0} é obrigatório")]
+    [MinLength(8, ErrorMessage = "O campo {0} deve conter no mínimo {1} caracteres")]
+    public string NewPassword { get; set; } = string.Empty;
+}
+
 public class UserQueryParams : QueryParams
 {
     public string? FullName { get; set; } = string.Empty;

@@ -6,6 +6,7 @@ namespace quickOS.Application.Interfaces;
 
 public interface IUserService
 {
+    Task<ApiResponse> ChangePasswordAsync(ChangePasswordInputModel inputModel);
     Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel);
     Task<ApiResponse> DeleteAsync(Guid externalId);
     Task<ApiResponse<IEnumerable<UserOutputModel>>> FillAutocompleteAsync();

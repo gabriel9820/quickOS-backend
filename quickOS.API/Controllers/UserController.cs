@@ -112,6 +112,19 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpPatch("change-password")]
+    public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordInputModel inputModel)
+    {
+        var result = await _userService.ChangePasswordAsync(inputModel);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return NoContent();
+    }
+
     [HttpDelete("{externalId:Guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Delete(Guid externalId)
