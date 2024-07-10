@@ -109,6 +109,20 @@ public class UserService : IUserService
         return ApiResponse<UserOutputModel>.Ok(result);
     }
 
+    public async Task<ApiResponse<UserOutputModel>> GetCurrentAsync()
+    {
+        var user = await _userRepository.GetByIdAsync(_requestProvider.UserId);
+
+        if (user == null)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
+        }
+
+        var result = user.ToOutputModel();
+
+        return ApiResponse<UserOutputModel>.Ok(result);
+    }
+
     public async Task<ApiResponse<UserOutputModel>> UpdateAsync(Guid externalId, UserInputModel userInputModel)
     {
         var user = await _userRepository.GetByExternalIdAsync(externalId);
@@ -135,6 +149,31 @@ public class UserService : IUserService
         user.UpdateRole(userInputModel.Role);
         user.UpdateIsActive(userInputModel.IsActive);
 
+        await _unitOfWork.SaveChangesAsync();
+
+        var result = user.ToOutputModel();
+
+        return ApiResponse<UserOutputModel>.Ok(result);
+    }
+
+    public async Task<ApiResponse<UserOutputModel>> UpdateCurrentAsync(UserProfileInputModel inputModel)
+    {
+        var user = await _userRepository.GetByIdAsync(_requestProvider.UserId);
+
+        if (user == null)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
+        }
+
+        var isValid = await ValidateCellphoneAndEmail(inputModel.Cellphone, user.Email, user.Id);
+
+        if (!isValid.Success)
+        {
+            return isValid;
+        }
+
+        user.UpdateFullName(inputModel.FullName);
+        user.UpdateCellphone(inputModel.Cellphone);
         await _unitOfWork.SaveChangesAsync();
 
         var result = user.ToOutputModel();

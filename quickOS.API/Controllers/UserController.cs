@@ -44,6 +44,19 @@ public class UserController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("current")]
+    public async Task<IActionResult> GetCurrent()
+    {
+        var result = await _userService.GetCurrentAsync();
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return Ok(result.Data);
+    }
+
     [HttpGet("{externalId:Guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> GetByExternalId(Guid externalId)
@@ -70,6 +83,19 @@ public class UserController : ControllerBase
         }
 
         return CreatedAtAction(nameof(GetByExternalId), new { externalId = result.Data!.ExternalId }, result.Data);
+    }
+
+    [HttpPut("current")]
+    public async Task<IActionResult> UpdateCurrent([FromBody] UserProfileInputModel inputModel)
+    {
+        var result = await _userService.UpdateCurrentAsync(inputModel);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return Ok(result.Data);
     }
 
     [HttpPut("{externalId:Guid}")]
