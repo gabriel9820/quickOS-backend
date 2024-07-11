@@ -1,4 +1,5 @@
 ﻿using quickOS.Application.Interfaces;
+using quickOS.Core.Enums;
 using quickOS.Core.Services;
 
 namespace quickOS.API.Providers;
@@ -7,6 +8,7 @@ public class RequestProvider : IRequestProvider
 {
     public int UserId { get; }
     public string UserEmail { get; } = string.Empty;
+    public UserRole UserRole { get; }
     public int TenantId { get; }
     public string AccessToken { get; } = string.Empty;
     public Guid RefreshToken { get; } = Guid.Empty;
@@ -25,6 +27,7 @@ public class RequestProvider : IRequestProvider
 
             UserId = payload.UserId;
             UserEmail = payload.UserEmail;
+            UserRole = payload.UserRole;
             TenantId = payload.TenantId;
             AccessToken = accessTokenCookie;
         }

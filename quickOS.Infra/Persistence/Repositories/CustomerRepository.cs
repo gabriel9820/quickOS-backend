@@ -25,6 +25,15 @@ public class CustomerRepository : ICustomerRepository
         _dbContext.Customers.Remove(customer);
     }
 
+    public async Task<IEnumerable<Customer>> FillAutocompleteAsync()
+    {
+        return await _dbContext.Customers
+            .AsNoTracking()
+            .Where(x => x.IsActive)
+            .OrderBy(x => x.FullName)
+            .ToListAsync();
+    }
+
     public async Task<PagedResult<Customer>> GetAllAsync(
         Expression<Func<Customer, bool>>? where,
         Expression<Func<Customer, object>>? orderBy,

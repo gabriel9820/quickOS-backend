@@ -8,6 +8,7 @@ public interface IProductRepository
 {
     Task CreateAsync(Product product);
     void Delete(Product product);
+    Task<IEnumerable<Product>> FillAutocompleteAsync();
     Task<PagedResult<Product>> GetAllAsync(
         Expression<Func<Product, bool>>? where,
         Expression<Func<Product, object>>? orderBy,

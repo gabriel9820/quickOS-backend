@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using quickOS.Application.Interfaces;
 using quickOS.Core.Entities;
+using quickOS.Core.Enums;
 using quickOS.Core.Models;
 using quickOS.Core.Repositories;
 
@@ -26,6 +27,17 @@ public class UserRepository : IUserRepository
     public void Delete(User user)
     {
         _dbContext.Users.Remove(user);
+    }
+
+    public async Task<IEnumerable<User>> FillAutocompleteAsync()
+    {
+        var roles = new List<UserRole> { UserRole.Admin, UserRole.Technician };
+
+        return await _dbContext.Users
+            .AsNoTracking()
+            .Where(x => x.IsActive == true && roles.Contains(x.Role))
+            .OrderBy(x => x.FullName)
+            .ToListAsync();
     }
 
     public async Task<PagedResult<User>> GetAllAsync(

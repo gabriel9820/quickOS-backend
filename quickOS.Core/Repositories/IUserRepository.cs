@@ -8,6 +8,7 @@ public interface IUserRepository
 {
     Task CreateAsync(User user);
     void Delete(User user);
+    Task<IEnumerable<User>> FillAutocompleteAsync();
     Task<PagedResult<User>> GetAllAsync(
         Expression<Func<User, bool>>? where,
         Expression<Func<User, object>>? orderBy,

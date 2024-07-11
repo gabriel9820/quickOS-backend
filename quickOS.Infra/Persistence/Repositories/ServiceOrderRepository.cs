@@ -34,6 +34,8 @@ public class ServiceOrderRepository : IServiceOrderRepository
     {
         var query = _dbContext.ServiceOrders
             .AsNoTracking()
+            .Include(x => x.Customer)
+            .Include(x => x.Technician)
             .AsQueryable();
 
         if (where != null)
@@ -60,6 +62,12 @@ public class ServiceOrderRepository : IServiceOrderRepository
     public async Task<ServiceOrder?> GetByExternalIdAsync(Guid externalId)
     {
         return await _dbContext.ServiceOrders
+            .Include(x => x.Customer)
+            .Include(x => x.Technician)
+            .Include(x => x.Services)
+            .ThenInclude(x => x.Service)
+            .Include(x => x.Products)
+            .ThenInclude(x => x.Product)
             .SingleOrDefaultAsync(s => s.ExternalId == externalId);
     }
 

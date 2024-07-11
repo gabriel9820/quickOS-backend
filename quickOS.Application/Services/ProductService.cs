@@ -51,6 +51,14 @@ public class ProductService : IProductService
         return ApiResponse.Ok();
     }
 
+    public async Task<ApiResponse<IEnumerable<ProductOutputModel>>> FillAutocompleteAsync()
+    {
+        var products = await _productRepository.FillAutocompleteAsync();
+        var productsDTO = products.ToOutputModel();
+
+        return ApiResponse<IEnumerable<ProductOutputModel>>.Ok(productsDTO);
+    }
+
     public async Task<ApiResponse<PagedResult<ProductOutputModel>>> GetAllAsync(ProductQueryParams queryParams)
     {
         var filters = GetFilters(queryParams);

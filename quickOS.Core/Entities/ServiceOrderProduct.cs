@@ -14,4 +14,41 @@ public class ServiceOrderProduct : BaseEntity
     /* Navigation */
     public Product Product { get; private set; }
     public ServiceOrder ServiceOrder { get; private set; }
+
+    private ServiceOrderProduct() { }
+
+    public ServiceOrderProduct(int item, Product product, double quantity, decimal price)
+    {
+        Item = item;
+        Product = product;
+        Quantity = quantity;
+        Price = price;
+
+        CalculateTotalPrice();
+    }
+
+    public void UpdateItem(int item)
+    {
+        Item = item;
+    }
+
+    public void UpdateProduct(Product product)
+    {
+        Product = product;
+    }
+
+    public void UpdateQuantity(double quantity)
+    {
+        Quantity = quantity;
+    }
+
+    public void UpdatePrice(decimal price)
+    {
+        Price = price;
+    }
+
+    public void CalculateTotalPrice()
+    {
+        TotalPrice = (decimal)Quantity * Price;
+    }
 }

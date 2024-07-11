@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using BC = BCrypt.Net.BCrypt;
+using System.Linq.Expressions;
 using System.Net;
 using LinqKit;
 using quickOS.Application.DTOs.InputModels;
@@ -24,6 +25,26 @@ public class UserService : IUserService
         _tenantRepository = tenantRepository;
         _requestProvider = requestProvider;
         _unitOfWork = unitOfWork;
+    }
+
+    public async Task<ApiResponse> ChangePasswordAsync(ChangePasswordInputModel inputModel)
+    {
+        var user = await _userRepository.GetByIdAsync(_requestProvider.UserId);
+
+        if (user == null)
+        {
+            return ApiResponse.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
+        }
+
+        if (!BC.Verify(inputModel.CurrentPassword, user.Password))
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "A senha atual está incorreta");
+        }
+
+        user.UpdatePassword(BC.HashPassword(inputModel.NewPassword));
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse.Ok();
     }
 
     public async Task<ApiResponse<UserOutputModel>> CreateAsync(UserCreateInputModel userInputModel)
@@ -65,6 +86,14 @@ public class UserService : IUserService
         return ApiResponse.Ok();
     }
 
+    public async Task<ApiResponse<IEnumerable<UserOutputModel>>> FillAutocompleteAsync()
+    {
+        var users = await _userRepository.FillAutocompleteAsync();
+        var usersDTO = users.ToOutputModel();
+
+        return ApiResponse<IEnumerable<UserOutputModel>>.Ok(usersDTO);
+    }
+
     public async Task<ApiResponse<PagedResult<UserOutputModel>>> GetAllAsync(UserQueryParams queryParams)
     {
         var filters = GetFilters(queryParams);
@@ -90,6 +119,20 @@ public class UserService : IUserService
     public async Task<ApiResponse<UserOutputModel>> GetByExternalIdAsync(Guid externalId)
     {
         var user = await _userRepository.GetByExternalIdAsync(externalId);
+
+        if (user == null)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
+        }
+
+        var result = user.ToOutputModel();
+
+        return ApiResponse<UserOutputModel>.Ok(result);
+    }
+
+    public async Task<ApiResponse<UserOutputModel>> GetCurrentAsync()
+    {
+        var user = await _userRepository.GetByIdAsync(_requestProvider.UserId);
 
         if (user == null)
         {
@@ -127,6 +170,31 @@ public class UserService : IUserService
         user.UpdateRole(userInputModel.Role);
         user.UpdateIsActive(userInputModel.IsActive);
 
+        await _unitOfWork.SaveChangesAsync();
+
+        var result = user.ToOutputModel();
+
+        return ApiResponse<UserOutputModel>.Ok(result);
+    }
+
+    public async Task<ApiResponse<UserOutputModel>> UpdateCurrentAsync(UserProfileInputModel inputModel)
+    {
+        var user = await _userRepository.GetByIdAsync(_requestProvider.UserId);
+
+        if (user == null)
+        {
+            return ApiResponse<UserOutputModel>.Error(HttpStatusCode.NotFound, "Usuário não encontrado");
+        }
+
+        var isValid = await ValidateCellphoneAndEmail(inputModel.Cellphone, user.Email, user.Id);
+
+        if (!isValid.Success)
+        {
+            return isValid;
+        }
+
+        user.UpdateFullName(inputModel.FullName);
+        user.UpdateCellphone(inputModel.Cellphone);
         await _unitOfWork.SaveChangesAsync();
 
         var result = user.ToOutputModel();

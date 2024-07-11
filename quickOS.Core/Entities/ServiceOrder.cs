@@ -19,8 +19,9 @@ public class ServiceOrder : MultiTenantEntity
     /* Navigation */
     public Customer Customer { get; private set; }
     public User Technician { get; private set; }
-    public ICollection<ServiceOrderProduct>? Products { get; private set; }
-    public ICollection<ServiceOrderService>? Services { get; private set; }
+    public ICollection<ServiceOrderProduct> Products { get; private set; } = [];
+    public ICollection<ServiceOrderService> Services { get; private set; } = [];
+    public ICollection<AccountReceivable>? AccountsReceivable { get; private set; }
 
     private ServiceOrder() { }
 
@@ -32,9 +33,7 @@ public class ServiceOrder : MultiTenantEntity
        string? problemDescription,
        string? technicalReport,
        Customer customer,
-       User technician,
-       ICollection<ServiceOrderProduct>? products,
-       ICollection<ServiceOrderService>? services)
+       User technician)
     {
         Number = number;
         Date = date;
@@ -44,15 +43,14 @@ public class ServiceOrder : MultiTenantEntity
         TechnicalReport = technicalReport;
         Customer = customer;
         Technician = technician;
-        Products = products;
-        Services = services;
-
-        CalculateTotalPrice();
     }
 
     public void UpdateStatus(ServiceOrderStatus status)
     {
-        Status = status;
+        if (status != ServiceOrderStatus.Invoiced)
+        {
+            Status = status;
+        }
     }
 
     public void UpdateEquipmentDescription(string? equipmentDescription)
@@ -75,11 +73,36 @@ public class ServiceOrder : MultiTenantEntity
         Technician = technician;
     }
 
+    public void AddService(ServiceOrderService service)
+    {
+        Services.Add(service);
+    }
+
+    public void RemoveService(ServiceOrderService service)
+    {
+        Services.Remove(service);
+    }
+
+    public void AddProduct(ServiceOrderProduct product)
+    {
+        Products.Add(product);
+    }
+
+    public void RemoveProduct(ServiceOrderProduct product)
+    {
+        Products.Remove(product);
+    }
+
     public void CalculateTotalPrice()
     {
         var productsTotal = Products != null ? Products.Sum(p => p.TotalPrice) : 0;
         var servicesTotal = Services != null ? Services.Sum(s => s.TotalPrice) : 0;
 
         TotalPrice = productsTotal + servicesTotal;
+    }
+
+    public void Invoice()
+    {
+        Status = ServiceOrderStatus.Invoiced;
     }
 }

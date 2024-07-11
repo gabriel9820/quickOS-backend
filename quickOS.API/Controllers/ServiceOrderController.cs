@@ -84,6 +84,20 @@ public class ServiceOrderController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpPatch("{externalId:Guid}")]
+    [Authorize(Roles = "Admin,Attendant")]
+    public async Task<IActionResult> Invoice(Guid externalId, [FromBody] ServiceOrderInvoiceInputModel inputModel)
+    {
+        var result = await _serviceOrderService.InvoiceAsync(externalId, inputModel);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return NoContent();
+    }
+
     [HttpDelete("{externalId:Guid}")]
     [Authorize(Roles = "Admin,Attendant")]
     public async Task<IActionResult> Delete(Guid externalId)

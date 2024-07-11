@@ -5,6 +5,7 @@ using LinqKit;
 using quickOS.Application.DTOs.InputModels;
 using quickOS.Application.DTOs.OutputModels;
 using quickOS.Application.Interfaces;
+using quickOS.Application.Mappings;
 using quickOS.Core.Entities;
 using quickOS.Core.Models;
 using quickOS.Core.Repositories;
@@ -49,6 +50,14 @@ public class ServiceProvidedService : IServiceProvidedService
         await _unitOfWork.SaveChangesAsync();
 
         return ApiResponse.Ok();
+    }
+
+    public async Task<ApiResponse<IEnumerable<ServiceProvidedOutputModel>>> FillAutocompleteAsync()
+    {
+        var services = await _serviceProvidedRepository.FillAutocompleteAsync();
+        var servicesDTO = services.ToOutputModel();
+
+        return ApiResponse<IEnumerable<ServiceProvidedOutputModel>>.Ok(servicesDTO);
     }
 
     public async Task<ApiResponse<PagedResult<ServiceProvidedOutputModel>>> GetAllAsync(ServiceProvidedQueryParams queryParams)

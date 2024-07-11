@@ -22,6 +22,126 @@ namespace quickOS.Infra.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("quickOS.Core.Entities.AccountPayable", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("DocumentNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("ExternalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsPaidOut")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateOnly>("IssueDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("PaymentDate")
+                        .HasColumnType("date");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Value")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("AccountsPayable");
+                });
+
+            modelBuilder.Entity("quickOS.Core.Entities.AccountReceivable", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("CustomerId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<string>("DocumentNumber")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)");
+
+                    b.Property<DateOnly>("DueDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("ExternalId")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsPaidOut")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateOnly>("IssueDate")
+                        .HasColumnType("date");
+
+                    b.Property<DateOnly?>("PaymentDate")
+                        .HasColumnType("date");
+
+                    b.Property<int?>("ServiceOrderId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TenantId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<decimal>("Value")
+                        .HasPrecision(10, 2)
+                        .HasColumnType("numeric(10,2)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.HasIndex("ServiceOrderId");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("AccountsReceivable");
+                });
+
             modelBuilder.Entity("quickOS.Core.Entities.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -636,6 +756,42 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("quickOS.Core.Entities.AccountPayable", b =>
+                {
+                    b.HasOne("quickOS.Core.Entities.Tenant", "Tenant")
+                        .WithMany("AccountsPayable")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("quickOS.Core.Entities.AccountReceivable", b =>
+                {
+                    b.HasOne("quickOS.Core.Entities.Customer", "Customer")
+                        .WithMany("AccountsReceivable")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("quickOS.Core.Entities.ServiceOrder", "ServiceOrder")
+                        .WithMany("AccountsReceivable")
+                        .HasForeignKey("ServiceOrderId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("quickOS.Core.Entities.Tenant", "Tenant")
+                        .WithMany("AccountsReceivable")
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("ServiceOrder");
+
+                    b.Navigation("Tenant");
+                });
+
             modelBuilder.Entity("quickOS.Core.Entities.Customer", b =>
                 {
                     b.HasOne("quickOS.Core.Entities.Tenant", "Tenant")
@@ -800,6 +956,8 @@ namespace quickOS.Infra.Persistence.Migrations
 
             modelBuilder.Entity("quickOS.Core.Entities.Customer", b =>
                 {
+                    b.Navigation("AccountsReceivable");
+
                     b.Navigation("ServiceOrders");
                 });
 
@@ -810,6 +968,8 @@ namespace quickOS.Infra.Persistence.Migrations
 
             modelBuilder.Entity("quickOS.Core.Entities.ServiceOrder", b =>
                 {
+                    b.Navigation("AccountsReceivable");
+
                     b.Navigation("Products");
 
                     b.Navigation("Services");
@@ -822,6 +982,10 @@ namespace quickOS.Infra.Persistence.Migrations
 
             modelBuilder.Entity("quickOS.Core.Entities.Tenant", b =>
                 {
+                    b.Navigation("AccountsPayable");
+
+                    b.Navigation("AccountsReceivable");
+
                     b.Navigation("Customers");
 
                     b.Navigation("Products");

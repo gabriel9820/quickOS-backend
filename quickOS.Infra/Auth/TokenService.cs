@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using quickOS.Core.Entities;
+using quickOS.Core.Enums;
 using quickOS.Core.Models;
 using quickOS.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
@@ -25,9 +26,10 @@ public class TokenService : ITokenService
 
         var userId = jwt.Claims.FirstOrDefault(claim => claim.Type == "id")?.Value;
         var userEmail = jwt.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email)?.Value;
+        Enum.TryParse(jwt.Claims.FirstOrDefault(claim => claim.Type == "role")?.Value, out UserRole userRole);
         var tenantId = jwt.Claims.FirstOrDefault(claim => claim.Type == "tenantId")?.Value;
 
-        return new TokenPayload(userId!, userEmail!, tenantId!);
+        return new TokenPayload(userId!, userEmail!, tenantId!, userRole!);
     }
 
     public (string, Guid) GenerateTokens(User user)
