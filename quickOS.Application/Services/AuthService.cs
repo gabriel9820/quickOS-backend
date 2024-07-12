@@ -18,6 +18,7 @@ public class AuthService : IAuthService
     private readonly IUnitOfWork _unitOfWork;
     private readonly ITokenService _tokenService;
     private readonly IUserService _userService;
+    private readonly IEmailService _emailService;
     private readonly IRequestProvider _requestProvider;
     private readonly IMapper _mapper;
 
@@ -27,6 +28,7 @@ public class AuthService : IAuthService
         IUnitOfWork unitOfWork,
         ITokenService tokenService,
         IUserService userService,
+        IEmailService emailService,
         IRequestProvider requestProvider,
         IMapper mapper)
     {
@@ -35,6 +37,7 @@ public class AuthService : IAuthService
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
         _userService = userService;
+        _emailService = emailService;
         _requestProvider = requestProvider;
         _mapper = mapper;
     }
@@ -113,5 +116,47 @@ public class AuthService : IAuthService
         var result = _mapper.Map<UserOutputModel>(user);
 
         return ApiResponse<UserOutputModel>.Ok(result);
+    }
+
+    public async Task<ApiResponse> ResetPasswordAsync(ResetPasswordInputModel inputModel)
+    {
+        var user = await _userRepository.GetByEmailAsync(inputModel.Email);
+
+        if (user == null ||
+            user.ResetPasswordToken == null ||
+            !user.ResetPasswordToken.Equals(inputModel.Token) ||
+            user.ResetPasswordTokenExpiresIn <= DateTime.UtcNow)
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "Token inválido ou expirado");
+        }
+
+        user.UpdatePassword(BC.HashPassword(inputModel.NewPassword));
+        user.ClearResetPasswordToken();
+        await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse.Ok();
+    }
+
+    public async Task<ApiResponse> SendResetPasswordLinkAsync(SendResetPasswordLinkInputModel inputModel, string domain)
+    {
+        var user = await _userRepository.GetByEmailAsync(inputModel.Email);
+
+        if (user == null)
+        {
+            return ApiResponse.Ok(); // returns success, as it prevents someone from testing existing emails in database
+        }
+
+        var token = _tokenService.GenerateRandomToken(24);
+        user.UpdateResetPasswordToken(token);
+        await _unitOfWork.SaveChangesAsync();
+
+        var link = $"{domain}/reset-password?email={user.Email}&token={token}";
+        var body = @$"Recebemos sua solicitação para redefinição de senha. <br><br> 
+                      Para redefinir sua senha clique neste <b><a href={link}>Link</a></b>. <br> 
+                      O mesmo tem validade de 30 minutos, após esse prazo deverá ser feita uma nova solicitação. <br><br>
+                      Caso você não tenha solicitado a redefinição, por favor desconsidere este e-mail.";
+        await _emailService.SendAsync(user.Email, "Redefinição de senha", body);
+
+        return ApiResponse.Ok();
     }
 }

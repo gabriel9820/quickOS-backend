@@ -20,7 +20,7 @@ public class ProductInputModel
     [Range(0, 99999999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
     public decimal CostPrice { get; set; }
 
-    [Range(0, 100.00, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
+    [Range(0, 99999999.99, ErrorMessage = "O campo {0} deve ser um valor entre {1} e {2}")]
     public decimal ProfitMargin { get; set; }
 
     [Required(ErrorMessage = "O campo {0} é obrigatório")]

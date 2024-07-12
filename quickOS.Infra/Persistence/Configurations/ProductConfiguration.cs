@@ -31,7 +31,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired(false);
 
         builder.Property(p => p.ProfitMargin)
-            .HasPrecision(5, 2)
+            .HasPrecision(10, 2)
             .IsRequired(false);
 
         builder.Property(p => p.SellingPrice)

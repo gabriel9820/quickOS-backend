@@ -10,3 +10,27 @@ public enum ServiceOrderStatus
     Completed = 6,
     Invoiced = 7
 }
+
+public static class ServiceOrderStatusExtensions
+{
+    private static readonly Dictionary<ServiceOrderStatus, string> Labels = new()
+    {
+        { ServiceOrderStatus.Open, "Aberto" },
+        { ServiceOrderStatus.InProgress, "Em Andamento" },
+        { ServiceOrderStatus.Quotation, "Orçamento" },
+        { ServiceOrderStatus.Approved, "Orçamento Aprovado" },
+        { ServiceOrderStatus.Rejected, "Orçamento Rejeitado" },
+        { ServiceOrderStatus.Completed, "Finalizado" },
+        { ServiceOrderStatus.Invoiced, "Faturado" }
+    };
+
+    public static string GetLabel(this ServiceOrderStatus status)
+    {
+        if (Labels.TryGetValue(status, out var label))
+        {
+            return label;
+        }
+
+        return Enum.GetName(typeof(ServiceOrderStatus), status)!;
+    }
+}

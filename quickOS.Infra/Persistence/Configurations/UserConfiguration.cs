@@ -14,6 +14,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.Email).IsUnique();
         builder.HasIndex(u => u.Cellphone).IsUnique();
         builder.HasIndex(u => u.RefreshToken).IsUnique();
+        builder.HasIndex(u => u.ResetPasswordToken).IsUnique();
 
         builder.Property(u => u.CreatedAt).IsRequired();
         builder.Property(u => u.UpdatedAt).IsRequired();

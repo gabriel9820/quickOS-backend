@@ -9,16 +9,12 @@ namespace quickOS.API.Controllers;
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
+    private readonly IConfiguration _configuration;
 
-    public AuthController(IAuthService authService)
+    public AuthController(IAuthService authService, IConfiguration configuration)
     {
         _authService = authService;
-    }
-
-    [HttpPost("forgot-password")]
-    public IActionResult ForgotPassword()
-    {
-        return NoContent();
+        _configuration = configuration;
     }
 
     [HttpPost("login")]
@@ -62,6 +58,32 @@ public class AuthController : ControllerBase
         }
 
         return Created("", result.Data);
+    }
+
+    [HttpPatch("reset-password")]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordInputModel inputModel)
+    {
+        var result = await _authService.ResetPasswordAsync(inputModel);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return NoContent();
+    }
+
+    [HttpPatch("send-reset-password-link")]
+    public async Task<IActionResult> SendResetPasswordLink([FromBody] SendResetPasswordLinkInputModel inputModel)
+    {
+        var result = await _authService.SendResetPasswordLinkAsync(inputModel, _configuration["Jwt:Audience"]!);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return NoContent();
     }
 
     private void SetTokensInCookies(string accessToken, Guid refreshToken)

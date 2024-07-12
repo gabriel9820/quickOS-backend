@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using quickOS.Infra.Persistence;
@@ -11,9 +12,11 @@ using quickOS.Infra.Persistence;
 namespace quickOS.Infra.Persistence.Migrations
 {
     [DbContext(typeof(QuickOSDbContext))]
-    partial class QuickOSDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240711143634_ProfitMarginPrecision")]
+    partial class ProfitMarginPrecision
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -728,12 +731,6 @@ namespace quickOS.Infra.Persistence.Migrations
                     b.Property<DateTime?>("RefreshTokenExpiresIn")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ResetPasswordToken")
-                        .HasColumnType("text");
-
-                    b.Property<DateTime?>("ResetPasswordTokenExpiresIn")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<int>("Role")
                         .HasColumnType("integer");
 
@@ -755,9 +752,6 @@ namespace quickOS.Infra.Persistence.Migrations
                         .IsUnique();
 
                     b.HasIndex("RefreshToken")
-                        .IsUnique();
-
-                    b.HasIndex("ResetPasswordToken")
                         .IsUnique();
 
                     b.HasIndex("TenantId");

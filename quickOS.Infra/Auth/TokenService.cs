@@ -6,6 +6,7 @@ using quickOS.Core.Models;
 using quickOS.Core.Services;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace quickOS.Infra.Auth;
@@ -30,6 +31,20 @@ public class TokenService : ITokenService
         var tenantId = jwt.Claims.FirstOrDefault(claim => claim.Type == "tenantId")?.Value;
 
         return new TokenPayload(userId!, userEmail!, tenantId!, userRole!);
+    }
+
+    public string GenerateRandomToken(int length)
+    {
+        var tokenData = new byte[length];
+        RandomNumberGenerator.Fill(tokenData);
+
+        var token = new StringBuilder(length * 2);
+        foreach (var b in tokenData)
+        {
+            token.AppendFormat("{0:x2}", b);
+        }
+
+        return token.ToString();
     }
 
     public (string, Guid) GenerateTokens(User user)
