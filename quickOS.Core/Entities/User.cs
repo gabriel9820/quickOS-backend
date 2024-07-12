@@ -1,5 +1,4 @@
 ﻿using quickOS.Core.Enums;
-using quickOS.Core.ValueObjects;
 
 namespace quickOS.Core.Entities;
 
@@ -13,6 +12,8 @@ public class User : BaseEntity
     public UserRole Role { get; private set; }
     public Guid? RefreshToken { get; private set; }
     public DateTime? RefreshTokenExpiresIn { get; private set; }
+    public string? ResetPasswordToken { get; private set; }
+    public DateTime? ResetPasswordTokenExpiresIn { get; private set; }
 
     /* Foreign Keys */
     public int TenantId { get; private set; }
@@ -58,6 +59,18 @@ public class User : BaseEntity
     {
         RefreshToken = newRefreshToken;
         RefreshTokenExpiresIn = DateTime.UtcNow.AddDays(7);
+    }
+
+    public void UpdateResetPasswordToken(string newResetPasswordToken)
+    {
+        ResetPasswordToken = newResetPasswordToken;
+        ResetPasswordTokenExpiresIn = DateTime.UtcNow.AddMinutes(30);
+    }
+
+    public void ClearResetPasswordToken()
+    {
+        ResetPasswordToken = null;
+        ResetPasswordTokenExpiresIn = null;
     }
 
     public void UpdateIsActive(bool isActive)
