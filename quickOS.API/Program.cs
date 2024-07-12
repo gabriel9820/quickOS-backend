@@ -1,5 +1,8 @@
+using QuestPDF.Infrastructure;
 using quickOS.API.Extensions;
 using quickOS.API.Middlewares;
+
+QuestPDF.Settings.License = LicenseType.Community;
 
 var builder = WebApplication.CreateBuilder(args);
 

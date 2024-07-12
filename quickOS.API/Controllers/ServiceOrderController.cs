@@ -30,6 +30,19 @@ public class ServiceOrderController : ControllerBase
         return Ok(result.Data);
     }
 
+    [HttpGet("individual-report/{externalId:Guid}")]
+    public async Task<IActionResult> IndividualReport(Guid externalId)
+    {
+        var result = await _serviceOrderService.IndividualReportAsync(externalId);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return File(result.Data!, "application/pdf", "ordem-servico.pdf");
+    }
+
     [HttpGet("{externalId:Guid}")]
     public async Task<IActionResult> GetByExternalId(Guid externalId)
     {

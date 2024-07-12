@@ -8,6 +8,7 @@ using quickOS.Application.Mappings;
 using quickOS.Core.Entities;
 using quickOS.Core.Enums;
 using quickOS.Core.Models;
+using quickOS.Core.Reports;
 using quickOS.Core.Repositories;
 
 namespace quickOS.Application.Services;
@@ -21,6 +22,7 @@ public class ServiceOrderService : IServiceOrderService
     private readonly IProductRepository _productRepository;
     private readonly IAccountReceivableRepository _accountReceivableRepository;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IServiceOrderReport _serviceOrderReport;
 
     public ServiceOrderService(
         IServiceOrderRepository serviceOrderRepository,
@@ -29,7 +31,8 @@ public class ServiceOrderService : IServiceOrderService
         IServiceProvidedRepository serviceProvidedRepository,
         IProductRepository productRepository,
         IAccountReceivableRepository accountReceivableRepository,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork,
+        IServiceOrderReport serviceOrderReport)
     {
         _serviceOrderRepository = serviceOrderRepository;
         _customerRepository = customerRepository;
@@ -38,6 +41,7 @@ public class ServiceOrderService : IServiceOrderService
         _productRepository = productRepository;
         _accountReceivableRepository = accountReceivableRepository;
         _unitOfWork = unitOfWork;
+        _serviceOrderReport = serviceOrderReport;
     }
 
     public async Task<ApiResponse<ServiceOrderOutputModel>> CreateAsync(ServiceOrderInputModel serviceOrderInputModel)
@@ -108,6 +112,20 @@ public class ServiceOrderService : IServiceOrderService
         var nextNumber = await _serviceOrderRepository.GetNextNumber();
 
         return ApiResponse<int>.Ok(nextNumber);
+    }
+
+    public async Task<ApiResponse<byte[]>> IndividualReportAsync(Guid externalId)
+    {
+        var serviceOrder = await _serviceOrderRepository.GetByExternalIdAsync(externalId);
+
+        if (serviceOrder == null)
+        {
+            return ApiResponse<byte[]>.Error(HttpStatusCode.NotFound, "Ordem de serviço não encontrada");
+        }
+
+        var report = _serviceOrderReport.GenerateIndividual(serviceOrder);
+
+        return ApiResponse<byte[]>.Ok(report);
     }
 
     public async Task<ApiResponse> InvoiceAsync(Guid externalId, ServiceOrderInvoiceInputModel inputModel)
