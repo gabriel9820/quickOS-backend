@@ -46,7 +46,7 @@ public class ServiceOrderReport : IServiceOrderReport
     {
         container.PaddingVertical(20).Column(column =>
         {
-            column.Item().Text($"Data: {DateTimeUtils.ConvertToBrasiliaTime(data.Date)}");
+            column.Item().Text($"Data: {DateTimeUtils.ConvertToBrasiliaTime(data.Date):dd/MM/yyyy HH:mm}");
             column.Item().Text($"Técnico: {data.Technician.FullName}");
             column.Item().Text($"Status: {data.Status.GetLabel()}");
 
@@ -182,7 +182,7 @@ public class ServiceOrderReport : IServiceOrderReport
     {
         container.Row(row =>
         {
-            row.RelativeItem().AlignLeft().Text($"Data: {DateTimeUtils.GetBrasiliaTime()}").FontSize(8);
+            row.RelativeItem().AlignLeft().Text($"Data: {DateTimeUtils.GetBrasiliaTime():dd/MM/yyyy HH:mm:ss}").FontSize(8);
 
             row.RelativeItem().AlignRight().Text(text =>
             {
