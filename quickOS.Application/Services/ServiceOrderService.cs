@@ -10,6 +10,7 @@ using quickOS.Core.Enums;
 using quickOS.Core.Models;
 using quickOS.Core.Reports;
 using quickOS.Core.Repositories;
+using quickOS.Core.Services;
 
 namespace quickOS.Application.Services;
 
@@ -23,6 +24,7 @@ public class ServiceOrderService : IServiceOrderService
     private readonly IAccountReceivableRepository _accountReceivableRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IServiceOrderReport _serviceOrderReport;
+    private readonly IEmailService _emailService;
 
     public ServiceOrderService(
         IServiceOrderRepository serviceOrderRepository,
@@ -32,7 +34,8 @@ public class ServiceOrderService : IServiceOrderService
         IProductRepository productRepository,
         IAccountReceivableRepository accountReceivableRepository,
         IUnitOfWork unitOfWork,
-        IServiceOrderReport serviceOrderReport)
+        IServiceOrderReport serviceOrderReport,
+        IEmailService emailService)
     {
         _serviceOrderRepository = serviceOrderRepository;
         _customerRepository = customerRepository;
@@ -42,6 +45,7 @@ public class ServiceOrderService : IServiceOrderService
         _accountReceivableRepository = accountReceivableRepository;
         _unitOfWork = unitOfWork;
         _serviceOrderReport = serviceOrderReport;
+        _emailService = emailService;
     }
 
     public async Task<ApiResponse<ServiceOrderOutputModel>> CreateAsync(ServiceOrderInputModel serviceOrderInputModel)
@@ -165,6 +169,31 @@ public class ServiceOrderService : IServiceOrderService
 
         await _accountReceivableRepository.CreateAsync(accountReceivable);
         await _unitOfWork.SaveChangesAsync();
+
+        return ApiResponse.Ok();
+    }
+
+    public async Task<ApiResponse> SendPDFByEmailAsync(Guid externalId)
+    {
+        var serviceOrder = await _serviceOrderRepository.GetByExternalIdAsync(externalId);
+
+        if (serviceOrder == null)
+        {
+            return ApiResponse.Error(HttpStatusCode.NotFound, "Ordem de serviço não encontrada");
+        }
+
+        if (serviceOrder.Customer.Email.Length == 0)
+        {
+            return ApiResponse.Error(HttpStatusCode.BadRequest, "E-mail não informado no cadastro do cliente");
+        }
+
+        var pdfBuffer = _serviceOrderReport.GenerateIndividual(serviceOrder);
+        var body = @$"Olá {serviceOrder.Customer.FullName}, segue em anexo sua ordem de serviço. <br><br> 
+                      A {serviceOrder.Tenant.Name} agradece a confiança em nosso trabalho.";
+        var attachments = new List<EmailAttachment>() { new(pdfBuffer, "ordem-servico.pdf") };
+        var emailPayload = new EmailPayload(serviceOrder.Customer.Email, "Ordem de Serviço", body, attachments);
+
+        await _emailService.SendAsync(emailPayload);
 
         return ApiResponse.Ok();
     }

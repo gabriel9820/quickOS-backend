@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.Configuration;
+using quickOS.Core.Models;
 using quickOS.Core.Services;
 
 namespace quickOS.Infra.Services;
@@ -14,7 +15,7 @@ public class EmailService : IEmailService
         _configuration = configuration;
     }
 
-    public async Task SendAsync(string to, string subject, string body)
+    public async Task SendAsync(EmailPayload payload)
     {
         var smtp = _configuration["Email:Smtp"];
         var port = int.Parse(_configuration["Email:Port"]!);
@@ -28,11 +29,20 @@ public class EmailService : IEmailService
         var mailMessage = new MailMessage
         {
             From = new MailAddress(email, "quickOS"),
-            Subject = subject,
-            Body = body,
+            Subject = payload.Subject,
+            Body = payload.Body,
             IsBodyHtml = true,
         };
-        mailMessage.To.Add(to);
+
+        mailMessage.To.Add(payload.To);
+
+        if (payload.Attachments != null)
+        {
+            foreach (var attachment in payload.Attachments)
+            {
+                mailMessage.Attachments.Add(new Attachment(new MemoryStream(attachment.Buffer), attachment.FileName));
+            }
+        }
 
         await client.SendMailAsync(mailMessage);
     }

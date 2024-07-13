@@ -8,6 +8,7 @@ using quickOS.Core.Entities;
 using quickOS.Core.Enums;
 using quickOS.Core.Repositories;
 using quickOS.Core.Services;
+using quickOS.Core.Models;
 
 namespace quickOS.Application.Services;
 
@@ -155,7 +156,9 @@ public class AuthService : IAuthService
                       Para redefinir sua senha clique neste <b><a href={link}>Link</a></b>. <br> 
                       O mesmo tem validade de 30 minutos, após esse prazo deverá ser feita uma nova solicitação. <br><br>
                       Caso você não tenha solicitado a redefinição, por favor desconsidere este e-mail.";
-        await _emailService.SendAsync(user.Email, "Redefinição de senha", body);
+        var emailPayload = new EmailPayload(user.Email, "Redefinição de senha", body);
+
+        await _emailService.SendAsync(emailPayload);
 
         return ApiResponse.Ok();
     }
