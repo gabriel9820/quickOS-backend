@@ -84,6 +84,20 @@ public class ServiceOrderController : ControllerBase
         return CreatedAtAction(nameof(GetByExternalId), new { externalId = result.Data!.ExternalId }, result.Data);
     }
 
+    [HttpPost("send-pdf-by-email/{externalId:Guid}")]
+    [Authorize(Roles = "Admin,Attendant")]
+    public async Task<IActionResult> SendPDFByEmail(Guid externalId)
+    {
+        var result = await _serviceOrderService.SendPDFByEmailAsync(externalId);
+
+        if (!result.Success)
+        {
+            return StatusCode(result.ErrorCode, result.ErrorMessage);
+        }
+
+        return NoContent();
+    }
+
     [HttpPut("{externalId:Guid}")]
     public async Task<IActionResult> Update(Guid externalId, [FromBody] ServiceOrderInputModel serviceOrderInputModel)
     {

@@ -13,5 +13,6 @@ public interface IServiceOrderService
     Task<ApiResponse<int>> GetNextNumber();
     Task<ApiResponse<byte[]>> IndividualReportAsync(Guid externalId);
     Task<ApiResponse> InvoiceAsync(Guid externalId, ServiceOrderInvoiceInputModel inputModel);
+    Task<ApiResponse> SendPDFByEmailAsync(Guid externalId);
     Task<ApiResponse<ServiceOrderOutputModel>> UpdateAsync(Guid externalId, ServiceOrderInputModel serviceOrderInputModel);
 }
